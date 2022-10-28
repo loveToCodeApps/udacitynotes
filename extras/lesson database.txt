@@ -1,0 +1,21 @@
+
+
+
+
+viewModelFactory is a class that knows how to create ViewModels.
+
+
+
+class ScoreViewModelFactory(private val finalScore: Int) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ScoreViewModel::class.java)) {
+            // TODO Construct and return the ScoreViewModel
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+
+we can't guarantee that that inserted id's are in order. , but auto generated id's are in ascending order .
+
+

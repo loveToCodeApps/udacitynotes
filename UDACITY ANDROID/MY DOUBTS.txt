@@ -1,0 +1,108 @@
+27-06-2022
+
+MY NEW DOUBTS:-
+
+1. Difference between Project Gradle and Module Gradle(App Level) ? 
+
+2.what project level gradle contains ?
+ ->it is diectly located in the root project directory(in project view of android)  and other gradle file is in the app directory of root directory.
+
+1. buildscript
+{
+  repositories
+{
+     google()
+     jcenter() 
+
+// This above 2 lines tells the repositories available for the entire project 
+// Repositories are remote servers where any external code is downloaded from, for eg. android libraries.
+google()  contains core android libraries maintained by google
+jcenter()  - large repository maintainted by jcenter popular amongst open source publishers
+}
+}
+
+2.Dependancies in gradle
+  this is external code that a project depends/relies upon 
+gradle is a generic tool , it does not know how to automatically build android  project  or kotlin files  
+so this 2 dependancies are important , this is where you can download gradle scripts to build android kotlin apps.This scripts are part of android plugins and this dependancies say which version of the plugins to download
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.HOW TO DECLARE GLOBAL VARIABLES IN ANDROID  ("lateinit" KEYWORD MEANING)
+ 2.1 why do we need global variable in android?
+   ->  bcoz after declaring any view as global .i.e. by finding it by it's id GLOBALLY , we can use it anywhere without finding id again & again.
+	
+
+2.ANSWER->    
+	so before onCreate() we can initialize it as 
+  		var diceImg:ImageView=findViewById()
+	But views in the layout can't be accessible before they are inflated by setContentView() method ,
+
+		so we can initialize it as a null  , 
+				var diceImg:ImageView?=null ,   and then we will set its value after view is inflated
+   			by setContentView() , but it will make our code complicated and everytime we actually
+			wanted to use this ImageView we will need to make null checks ,
+	so the common pattern in android to initialize non-null variables in onCreate() is to use lateinit Keyword
+   	lateinit var diceImg:ImageView
+   so , lateinit keyword is promising kotlin compiler that the variable will be initialized before calling any operations on it.
+	Basically we are promising that we will not leave it as null.so by using lateinit keyword we don't need to initialize it as null here.
+	so , after setContentView()
+	diceImage=findViewById(R.id.img1)
+
+
+3.   tools:src 
+  so we were making dice roller app and set the starting imageview to empty_dice .i.e 
+	android:src="@Drawable/empty_dice"   i.e. it is an empty image, but in preview pane we are not seeing anything so we are not getting idea of how that image will look like in respect to other views,
+	so we will use another extra property i.e. tools:src="@Drawable/dice_three"   and it will show dice_three image in preview panel and not the empty_dice image  ,  don't worry it is only limited to preview panel for our understanding and 
+  at time of compilation it gets completely ignored by the compiler.
+
+
+4. VECTOR DRAWABLES
+  In dice roller app, we have dice images as xml(they are defined colors  & shapes) files. This are vectors. .i.e. they can scale on any size without loosing their quality.
+But vectors are only supported in API LEVEL 21 & ONWARDS.But our app has minSdkVersion=19 , but it is still working fine , how?
+ so when we compile our app , our gradle is as part of this process generates PNG's and uses them instead of xml's below sdk version 19.
+and usage of these PNG's will make size of our app big , and it is not good for our app for number of reasons like:-
+1.it makes app slower for users , which can takes up user's data plan.
+2.it fills up device's limited memory
+3.larger app size also decreases the number of user downloading app.
+
+GOOD NEWS:- so we now have a androidx compatibility library for vector drawables all the way back to the API LEVEL 7.
+ 
+3  steps for adding androidx compatibility library of  vector drawables:-
+
+1.add androidx vector support to build.gradle(module level)
+	defaultConfig
+	{
+	    vectorDrawables.useSupportLibrary=true
+
+	}	
+
+
+2.add new namespace to layout
+
+the android namespace defined up here, is a namespace for all the attributes that come as a part of core android framework.
+and we can see that android namespace is used all over in layout file. for eg.  <TextView  android:text="Hello World">
+Meanwhile this app namespace is for the attributes that comes from either from your custom code or libraries and not from your core android framework.
+so once we added the app namespace we can use it 
+ eg of app namespace:-
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+3.change src to srcCompat
+now make src to ->  srcCompat
+eg.  <TextView  app:srcCompat="@Drawables/empty_dice">
+Here srcCompat uses androidx library to support vector drawables in older versions of android all the way to API LEVEL 7

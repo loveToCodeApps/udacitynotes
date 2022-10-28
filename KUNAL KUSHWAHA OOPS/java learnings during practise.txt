@@ -1,0 +1,72 @@
+       java learnings during practice		          12/05/2022
+
+1.if u want class as public 
+then class name should match with file name.
+
+2.if you want to access methods/variables of the same class in main() method(main() is static), then they should be static.
+
+3. if you want to access other class's method/variable then it need not to be static , you can access it by creating object of that other class in the required main() method.  
+
+4.if  i'm  using  finalize()  method then it should written inside the class whose  millions of objects you are creating.
+
+5. in same .java file  if you have other class , then you can have main() method in that , but that method will not get execute , only main() method of class that have same as file name will get execute.
+
+6. in a java file you can have other classes , but only class with same name as file name will be public
+other classes will be just like eg. class Data{}
+
+
+7. So, in same package  if you didn't write any access modifiers to var/methods , then it is default by-default
+i.e. you can access anything within same package but can't access it from outside package.
+so if you want to access any variable that is from other package make that var/methods a public , don't put it 
+as defalt (VERY IMP NOTE)
+
+8.we can access Static Variables/Functions without creating any objects , as they are independent of any objects.
+But we can access them using reference variables(objects) and it's ok but a bad practice bcoz we know that they are independent of objects.
+Instead of reference varaible we can use ( class_name.Static_varible ).
+
+9.We can't access non-static stuff into static methods , so either make it static or create object and then access it.
+
+10. We can call static stuff from non-static context , but we cannot call non-static stuff from a static context.
+
+--------------  INHERITANCE -----------------------
+
+
+11. If we have default constructor of child class , and if we dont initiallize variables of parent class in default constructor of child class 
+then also it will automatically call Box() i.e. default constructor of parent class.we dont neeed to use super ().
+However you can specify  super()  which means you are calling default constructor of  parent class
+
+Tired()
+{
+  // here it is calling default constructor of Box() 
+  //   
+ super();      //  this is not compulsory bcoz it willl calll Box() automatically
+    this.weight=1000;
+//    this.l=234567;
+}
+
+12. If we don't use super parameter constructor here then it will call default constructor of [arent class here i.e. super();  <-- you can write this to call default constructor of parent class.
+
+13. public class Tired extends Box{
+int weight;
+Tired()
+{
+
+
+  
+    
+    //this is how we can change values of default constructor variables of parent class
+// otherwise it will set values to default constructor of parent class  for that 1) do nothing   or   2) call super();
+   this.l=4;
+  this.w=6;
+   this.h=5;
+
+    this.weight=1000;
+
+}
+
+14. passing object as parameter in child class constructor.
+
+
+
+
+

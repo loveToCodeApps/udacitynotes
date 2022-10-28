@@ -1,0 +1,18 @@
+
+
+
+
+In kotlin & Android -  Data   -  represented by -   Data Classes
+And we need a way to act on that data & database -  In Kotlin - These are function calls
+
+
+***** we use data classes to represent our tables. **************
+and use annotations to specify things like which property represents primary key.
+we create interfaces that define how to interact with the databases.
+
+we will annotate the data class as Entity , by default  , the name for storing  instances of this entity is same as the class name.
+we can specify the name of the table to be different from the name of the entity class.
+
+if we pass parameter to primary key annotation as autoGenerate=true it will guarantee to generate unique values for our primary key
+
+we will annotate remaining properties with annotation @ColumnInfo  ,  default name of annotation is same as variable name , but we can change it by passing (name = value)

@@ -1,0 +1,13 @@
+to stop floating button from jumping when click on txt
+
+in manifest <activity> tag add:-  
+	 android:windowSoftInputMode="adjustPan"
+
+
+PENDING:PROBLEM  -- (NOW SOLVED -> BY MAKING NEW THEME SEPARATE FOR FAB)
+TOGGLE BUTTON COLORS ARE CHANGING WHEN WE CHANGE COLOR OF ACTION BAR
+
+
+@VVVIMP
+2.to make other activity launch first , paste <intent-filter> tag inside him and 
+set exported=true

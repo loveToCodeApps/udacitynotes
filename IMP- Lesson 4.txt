@@ -1,0 +1,9 @@
+
+
+LESSON 4 :-
+ADB(Android Debug Bridge) works in 
+API LEVEL 28 & more.
+It is used to kill background process programatically
+for eg. to check how data loss happen by OS Shutdown.
+
+ 

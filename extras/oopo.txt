@@ -1,0 +1,16 @@
+while defining uiScope 
+if you use ,  instead of +  , it will give you a n error in :-
+
+    val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)  // correct
+    val uiScope = CoroutineScope(Dispatchers.Main , viewModelJob)  //error
+
+
+2. always use camelcase to name packages/folders
+don't start with capital , that error took me 3-4 hours to solve
+
+PENDING
+in,
+fun onNavigateDone()
+i use _navigateToSleepQuality = null
+so it needed to make it nullable by adding ?
+but udacity app don't have it ?

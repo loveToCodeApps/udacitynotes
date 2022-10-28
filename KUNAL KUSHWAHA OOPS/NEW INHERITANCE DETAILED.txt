@@ -1,0 +1,188 @@
+
+Inheritance Learnings:
+*). if you only make one parameterized constructor in class , then it will give error that there is no default constructor in class , .i.e. you need to explicitly  create a default constructor.
+1.parent class variables are avilable in child class , we need initialize them for every diff. object bcoz each variable may be having diff. value for eg. age (age can be diff . for sagar kunal prasad .i.e. objects)for that use constructors(bcoz constr. use to initialize objects)
+2.super() initializes parent variables to default values set in parent constructor and super(arg 1,arg 2...arg n) will initialze parent variables to values we provide in child class object creation.
+3.Even if we don't mention super() then still it will initialize parent variables to default values set , and if you dont even have default parent constructor , then it will initialize that variables to default null's or 0's.
+for eg.
+
+Tired()        //ERROR ERROR ERROR 
+    {
+        this.weight=-2;
+    }
+
+REASON :- IF WE HAVE PARAMETER CONSTRUCTOR AND NOT DEFAULT CONSTRUCTOR IT WILL SAY YOU DONT HAVE DEFAULT CONSTRUCTOR IN PARENT CLASS,(BECOZ IN CHILD CLASS CONSTRUCTOR IT IS AUTOMATICALLY CALLING SUPER() I.E. DEFAULT PARENT CONSTRUCTOR)
+LOOK IF YOU DONT HAVE PARAMETER CONS. IT'S OK BUT IF YOU HAVE PARAMETER CONST. THEN YOU MUST NEED TO WRITE DEFAULT CONSTRUCTOR EXPLICITLY.
+
+4.If you have any variables declared as " Private " in parent class , you cannot access them in child class. 
+but you can initialize private variable in child constructor using super() --> it will not give any error bcoz it is get initialize by parent class , not child class , but you can't even print it in 
+child class main() method by object of child class and even by object of parent class in the child class main().
+ (WHAT DOD WE LEARN):- YOU CAN'T ACCESS/MODIFY/PRINT PRIVATE VARIABLES OUTSIDE THE SAME CLASS AND YOU CAN'T INHERIT PRIVATE MEMBERS OF PARENT CLASS.
+
+5.   ASSINING CHILD CONSTRUCTOR TO A PARENT REFERENCE TYPE
+eg.  Box box=new Tired();
+
+
+
+ class Box()
+ {
+ int x;
+ Box(int x)
+ {
+  this.x=x;
+  }
+ }  
+   class Tired extends Box{
+  int weight;
+Tired(int s, int w)
+super(s);     // it is calling parent parameterized constructor here
+this.weight=w;
+  }  
+main()
+{
+Box box1=new Tired(2,3);      // VIMP VIMP VIMP VIMP VIMP VIMP
+box1.x;      // OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK 
+box1.weight;   // WHY/ ERROR WHY? ERROR WHY? ERROR WHY? ERROR  WHY?
+(BCOZ WHAT VARIABLES YOU CAN ACCESS IS DETERMINED BY THE TYPE OF REFERENCE VARIABLE AND NOT BY THE OBJECT ITSELF
+)
+}
+
+6. 5.   ASSINING PARENT CONSTRUCTOR TO A CHILD REFERENCE TYPE
+
+eg.  Tired t1=new Box();  // ERROR ERROR ERROR ERROR ERROR 
+
+BECOZ WHAT VARIABLE YOU CAN ACCESS IS DEPENDS ON TYPE OF REFERENCE VARIABLE AND WHAT YOU WILL ACTULLY ACCESS DEPENDS ON TYPE OF OBJECT CREATED.
+SO HERE , REF. TYPE IS OF CHILD CLASS BUT OBJECT IS OF PARENT.SO WHATEVER EXTRA VARIBLES IN CHILD CLASS PRESENT CAN'T BE ACCESED BY THE CONSTRUCTOR OF
+ PARENT CLASS .I.E PARENT CLASS CAN'T CALL CHILD CLASS CONSTRUCTOR , SO IF YOU CANT ACCESS/INITIALIZE VARIABLES OF REF.TYPE CLASS THEN WHAT'S THE PONT IN CREATING THAT CONSTRUCTOR  THAT'S WHY IT IS GIVING ERROR.
+
+7. IN A CHILD CONSTRUCTOR , WHILE CALLING SUPER() CONSTRUCTOR , IT SHOULD BE FIRST STATEMENT OF THE CHILD CONSTRUCTOR.
+BECOZ IT DON'T KNOW ABOUT CHILD CLASS VARIABLES , SO IT DOESN'T CARE ABOUT CHILD CLASS , SO IT IS MUST TO INITIALIZE PARENT VALUES FIRST.
+BUT AS CHILD KNOWS EVERYTHING ABOUT PARENT , SO IT DOES CARE ABOUT PARENT CLASS , SO IT LET PARENT CONSTRUCTOR GET CALLED FIRST.
+
+
+	  
+  Box(Box bb)
+{
+   this.x=bb.x;
+}
+ class Tired extends Box
+{
+  Tired(Tired tt)
+  {
+    super(tt);   #code 213
+  }
+}
+# code 213 :-  here listen , super class reference can be used to reference an object from derived class,that's why we were able to pass child object type to parent constructor.it is allowed.
+
+
+8.   VIMP NOTE:--      super() only calls constructor just above it.
+  for eg.  MULTILEVEL INHERITANCE
+ (PARENT) A->(CHILD)B->(CHILD)C
+
+IF C EXTENDS B THEN WE CANT CALL CONSTRUCTOR (SUPER()) OF CLASS A  BECOZ IT CAN ONLY CALL CONSTRUCTOR OF JUST ABOVE CLASS I.E. CLASS B AND NOT CLASS A BUT EVEN IF YOU WANT TO CALL CLASS A CONSTRUCTOR FROM CLASS C THEN YOU SHOULD CALL IT FROM THE CLASS B CONSTRUCTOR BODY IMPLICITLY.
+
+
+     --------------------------------------------------------POLYMORPHISM-----------------------------------------------
+
+9.lang. that supports polymorphism--> object oriented languages
+         not     supports polymorphism--> object basis languages
+10.polymorphism occurs during inheritance.
+11.constructor overloading is example of polymorphism(act of representing the same thing in multiple ways).
+12.-----------------TYPES OF POLYMORPHISM 
+    A) STATIC POLYMORPHISM/COMPILE-TIME POLYMORPHISM:-
+       - Is is achieved via method overloading.
+       -Box box=new Box(1,2,3);  or  Box box2=new Box();<------(At compile time it dertermines which method to actually run[here constructor is also a function ])
+	or
+      - box.sum(1,2);   box.sum(1,2,3); <----(At compile time it dertermines which method to actually run)
+        so, here actua memory creation happens at the run time , but all the type checking happens at compile time .i.e to call which method .i.e for eg. at compile time it will decide to call method that takes 3 arguments so that's why it is called compile time polymorphism.
+        -At compile time it dertermines which method to actually run , hence it is called compile time polymorphism. 
+   
+13. double sum(double a , int b)
+	{
+	    return a+b;
+	}     
+    main()
+  { 
+     obj.sum(1,2);    OK OK OK OK OK BCOZ IT AUTOMAT.CONVERTS (INT TO DOUBLE) 
+}
+  BUT 
+	double sum(double a , int b)
+	{
+	    return a+b;
+	} 
+	double sum(int a , int b)
+	{
+	    return a+b;
+	} 
+	main()
+	{
+	   obj.sum(1,2);   // HERE IT WILL CALL 2ND METHOD BCOZ OF BOTH INT ARGUMENTS.
+	}
+
+14.A) DYNAMIC POLYMORPHISM/RUN-TIME POLYMORPHISM:-
+       - Is is achieved via method overriding.
+       -method overriding - IN PARENT AND CHILD CLASS YOU HAVE SAME METHOD , EVERYTHING IS SAME BUT ONLY BODY DIFFERS.
+       -   @Override -   it is annotation and it's purpose to check whether a method is being overriden or not.
+       -    eg.  Box(parent)  and  Tired(child)
+       -     Box b1=new Tired();
+             b1.area(); 
+	[HERE WHAT THINGS YOU HAVE ACCESS TO IS DEPENS ON REFERENCE TYPE AND WHAT YOU WILL ACTUALLY CALL DEPENDS ON THE TYPE OF OBJECT CREATED ]
+                   [SO IT WILL CHECK IF BOX(parent class) HAS area() METHOD , IF IT HAS THEN IT WILL CALL IT FROM THE TIRED(child class)]
+    		-------------------------BUT--------------------
+	Tired t1=new Box();
+HERE YOU CANT HAVE CHILD REFERENCE TO PARENT OBJECT BCOZ WHAT YOU CAN REALLY ACCESS DEPENDS ON OBJECT TYPE , BUT HERE IT IS PARENT WHICH DON'T KNOW ANYTHING ABOUT CHILD ,
+SO HOW CAN HE WILL ACCESS CHILD MEMBERS , SO THERE IS NO POINT OF CREATION OF THIS OBJECT THAT'S WHY IT IS GIVING ERROR
+
+15. 	THIS IS NOT OVERRIDING
+	CHILD REFERENCE=CHILD OBJECT TYPE
+	PARENT REFERENCE=PARENT OBJECT TYPE
+
+	ACTUAL OVERRIDING
+	PARENT REFERENCE=CHILD OBJECT TYPE     (Box b1=new Tired();)      
+
+	Here which method will be called depends upon object type(new Tired()) --> it is called "UPCASTING"
+	and  Box b1=new Tired()  is called Overriding.
+
+16. HOW JAVA DECIDES WHICH MATHOD TO CALL ?
+	IT IS DECIDED BY:
+	DYNAMIC METHOD DISPATCH - IT IS JUST A MECHANISM BY WHICH CALL TO A OVERRIDEN METHOD IS RESOLVED AT RUN TIME RATHER THAN COMPILE TIME.
+WHEN AN OVERRIDEN METHOD IS CALLED THROUGH SUPER CLASS REFERENCE VARIABLE , JAVA DETERMINES WHICH VERSION OF THE METHOD TO CALL BASERD ON THE TYPED OF THE OBJECT AT THE TIME THIS CALL HAPPENS , HENCE THIS DETERMINATION WILL BE MADE AT RUNTIME .I.E. WHEN IT IS ACTUALLY CALLING IT(AT RUNTIME)
+
+
+
+17.FINAL METHODS CAN'T BE OVERRIDE 
+LATE BINDING ->overriding decides which method to run at runtime after compilation and everything so it is called - LATE BINDING.
+EARLY BINDING ->FINAL METHODS CAN'T BE OVERIDE IN OTHER CLASS , SO TASK TO RESOLVE CALLING METHOD IS RESOLVED AT COMPILATION , SO IT IS CALLED - EARLY BINDING
+
+18.FINAL CLASS CAN'T BE INHERIT BY ANY CLASS.
+
+19. CAN WE OVERRIDE STATIC METHOD ?
+  - static methods can be inherited .i.e. they can be calleed using object of child class , but they can't be overrided bcoz overriding deals with objects and static merthods are independent of objects that's why static methods can't be overriden.Dynamic method dispatch will not happen if it is static.
+
+20. POLYMORPHISM DOES NOT APPLY TO INSTANCE VARIABLES.
+
+21. ENCAPSULATION VS ABSTRACTION
+  ABSTRACTION - IT SOLVES THE DESIGN LEVEL ISSUE.
+                               -IT HIDES UNNECESSARY DETAILS AND SHOWS REQUIRED FUNCTIONALITIES.
+                                -HERE DESIGNERS WILL TELL YOU LIKE GIVE ME THESE 3 METHODS AND TO DO THAT WHATEVER LOGIC YOU WANT TO PUT OR WHATEVER CODE WANT TO WRITE , JUST DO IT.USER IS ONLY CONCERN WITH THAT 3 FUNCTIONS.
+		-ABSTRACTION IS THE PROCESS OF GAINING INFORMATION.
+		-IT IS ACHEIVED VIA  ABSTRACT CLASS AND INTERFACES.
+
+ENCAPSULATION - IT SOLVES IMPLEMENTATION LEVEL ISSUE.
+                                  -IT COMBINES ALL DATA AND METHODS INTO SINGLE ENTITY ( for examples putting everything in class , an using public , private to hide it) , TO PROTECT IT FROM THE OUTSIDE WORLD.
+		-ENCAPSULATION IS THE PROCESS OF CONTAINING INFORMATION.
+
+22. ENCAPSULATION  VS  DATA HIDING
+-- ENCAPSULATION IS SUB-PROCESS OF DATA HIDING.
+--DATA HIDING USED FOR SECURITY REASONS .PRIVATE KEYWORD USED TO PREVENT ACCESS FROM OTHERS.
+--ENCAPSULATION MEANS HIDING THE COMPLEXITY OF THE SYSTEM . IT CAN BE PUBLIC OR PRIVATE WHATEVER.
+--DATA HIDING(HIDE COMPLEXITY + SECURITY)
+--ENCAPSULATION(ONLY HIDE COMPLEXITY)
+
+------------------------------------------------------ ABSTARACT CLASS -----------------------------------------------------------------
+23.(VIMP)we can't create object of abstract class , bcoz we have empty abstract methods(without body) , so if we call them using objects of abstract class , then it will give error.
+even if you want to create object of abstract class in main() , java will suggest you to override all abstract method in main() while creating object.
+But it  does not fit definition of abstract method.i.e. no body methods.
+
+24.
+	

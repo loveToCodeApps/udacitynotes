@@ -1,0 +1,169 @@
+video starting it shows some bugs like:-
+1.we you have currency textview  like $50(by clicking from 0$)  when you rotate phone horizontally
+it will reset to 0$(data loss)
+2.even when you  goes out of app by backbuttton and restart it again from recent activities or by clicking on app icon
+it will restart but currency again resets to 0$(data loss)  , (not by pressing middle button or while switiching apps)
+3.if you timer started in your app , but if you exit app(it is still in recent apps) , the timer is still going on. 
+
+EVERY FRAGMENT & ACTIVITY HAVE IT'S OWN LIFECYCLE.
+
+Activity Lifecycles is made of different states that an activity goes through from when it's first initialized to finally it gets destroyed.
+This tracks whether user is on screen or he completely navigates away from app
+
+
+Q.1)  why does this all matters and what is the use of Activity lifecycle ?
+--->so think of your phone , when someone is using app they expect it to works well and render smoothly for them.
+you can do this by keeping your fragments and activities by using excessive amount of your os's limited resources
+To manage your fragments and activites you need to know thier current states.
+
+for eg. if you have an called "Physics Simulation" showing animation and calculating different measures like angle , speed etc. using resources and
+then if got a phone call , will it be great if that app continuously going on calculating and showing that measures?
+VIMP VIMP VIMP VIMP VIMP
+i.e. (The user opens a physics simulation that takes a lot of heavy computation to display. 
+Then they get a phone call.During the phone call, should you keep computing the positions of 
+objects in the physics simulation?)
+-> NO     (Since the user is no longer looking at your physics sim, in most cases you can safely stop
+ CPU intensive calculations that display and run the physics simulation.)
+
+Now it is good if it get's stop when i take call but when i returned and see that it is still stopped it will be confusing.
+Suppose i somehow manage to open 20 apps who all running same cpu intensive simulation and this app's are not on screen but
+still doing heavy rendering calculation in background , then it will really make my phone very slow.
+so as a developer you need to know all states of your activities , so you can manage situations like this.
+But you are not only one to care about apps performance , there is android OS who continuoslly watches state of your activites to improve battery life and
+app performance.Android OS occasionally will stops and restarts  app behind the scenes , so you both want to code proactively and defencively.
+PROACTIVELY-- to clean up unused resources , so activities on screen runs smoothly.
+DEFENSIVELY--OS does something like restart your app
+Hence this all need to know bts(behind the scenes ) and act. states of your app.
+
+
+
+To know when and in what oder are this lifecycle methods get called we don't need to chane ui or do anything fancy.
+We have android Logging API.It will show short messages on console , so we will get know in what order they are getting triggered.
+Now we will show a log message when onCreate method is called
+   Log.i("MainActivity","onCreate()  called")
+  -->   i   (info)is the log level which defines severity and give 2 parameters .i.e. tag and actual message
+in android we generally put class name in tag.
+
+Timber Library for Logging :-
+benefits of timber
+1.automatically generates tags based on class name
+2.avoid showing logs in released app apk's
+3.easy integration with crash reporting libraries.
+
+Setup Timber:-
+1.add timber gradle dependancy(app level)
+2.make application class
+application class :- a base class that contains global application state for your entire app.it is main object that OS uses to interact with ur app.
+There is already a default application class used by OS if you are not doing anything special.So there will be always an application object created for your app.
+But sometime you may want to do some setup for utility that your app gonna use.Timber is good example of that.
+Timber needs application class bcoz whole app will be using this logging library.
+Also u wanted to initialize Timber before anything else is initialized(that includes all activities and fragments).
+
+so we are gonna make subClass of type Application class and will override all the defaults with your own custom implementation
+
+3.add application to manifest
+in manifest ,  in <application>  tag 
+  add android:name=".PusherApplication"
+
+if u don't add in manifest , you are not actually be using Application subclass but u will not see any Timber logs.
+
+
+4.initialize timber in application class
+finally to set Timber in application class use 1 line :
+
+	 Timber.plant(Timber.DebugTree())
+ 
+ Now in MainActivity just use Timber Log Statements , 
+
+Log.i("MainActivity","onCreate() called")
+Timber.i("onCreate() called")
+
+middle button pressed :-  onPause()   onStop()
+App opened / app opened from recent apps :-  onCreate() , onStart() , onResume()
+Press backbutton to exit app(it destroys activity) :-  onPause()  onStop()   onDestroy()    [onStop()   onDestroy()  ->  if activity no longer visible.]
+when we press share button a dialog of app appears :-  onPause()
+when we click outside of share dialog in activity  :- onResume()
+when w rotate phone horizontally(Destroy Activity + Recreates activity)  :-
+       onPause()->onStop()->onDestroy()->onCreate()->onStart()->onResume()
+(Activity is visible)
+onStart()- when we are in activity(visible)
+onStop()- when leave activity (not visible)
+
+(Activity has focus)
+onPause()  &   onResume()  deals with focus of screen
+when an activity is in focus   -   onResume()
+when an activity looses focus , (still activity visible)  -   onPause()
+
+   
+    DessertTimer    in    DessertPusher App
+we started timer by calling   desserPusher.startTimer()  in onStart() method  and pause the timer by calling 
+  dessertPusher.stopTimer() in onStop().
+
+it was easy bcoz we only had one timer to start/stop what if we will run into a situation where we will need to handle multiple things and mention them in onStart() and onStop()  onDestroy()
+like handling animations,sensors,mediaPlayers,timers etc.  but even if we forgot to setup any one we will run into a bugs/headaches   
+
+But it would be nice if the classes that manage animations,timers,sensors could be in-charge of themselves.
+for eg. if a dessertTimer could be in-charge of themselves of starting and stoping timer themselves.
+
+So,  in 2017 Google announced a  Lifecycle library with the goal of simplified working with the activity/fragment  lifecycle.
+Before Lifecycle library the only way to interact with this lifecycle was only through the callback methods.
+
+The Lifecycle library  introduced android lifecycle as an actual object (this.lifecycle). This new object can be
+queried and checked for the state(.currentState.isAtleast(LifeCycle.State.STARTED))
+
+LifeCycle Library also introduced lifecycle-owner interface & lifecycle-obeserver interface.
+
+LifeCycle Owners:-  Anything that has it's own LifeCycle. for Eg. Activity,Fragment.
+LifeCycle Obeserver:-L.Ob. obeserves the lifecycle of LifeCycle Owner such as an Activity
+
+Obeserver Pattern :- This is an software design pattern that involves an object called as "subject" which keeps tracks of list of other objects 
+called as "obeserver" . The obeservers are said to be watching/obeserving subject.when state of subject changes it notifies it's list of obeservers .
+so if we think of our code , the activity is currently in-charge of telling the to start or stop.
+
+but if we were using obeserver pattern we'd actually flip that responsibility of that relationship , instead the timer would become the obeserver of the activity.As the activity changes , the timer would be notified.
+it would actually be then timer's responsibilty to decide what to do with that info.In this case it could call it's own
+start() and stop() itself . Basically timer is saying don't tell me what to do , just let me know when state changes.
+Then i'll handle it.
+
+steps to implement LifeCycle Obeserver :-
+
+
+1. Make DessertTimer a LifecycleObserver:
+ In order to achieve this, DessertTimer should implement a LifecycleObserver, 
+take in a Lifecycle as a parameter and establish observer relationship in init block.
+
+class DessertTimer(lifecycle: Lifecycle) : LifecycleObserver {
+     NOTE:-  // lifecycle:Lifecycle   is an kotlin object that represents an lifecycle like activity lifecycle
+    init {
+        lifecycle.addObserver(this)
+    }
+}
+
+
+2.in MainActivity ,  Pass in 'this' MainActivity's lifecycle so that it is observed:
+
+dessertTimer = DessertTimer(this.lifecycle)
+
+3.init {
+        lifecycle.addObserver(this)
+    }
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+onSaveInstanceState()   is a callBack where u can save data that u might need in case android OS destroys ur app.
+it is good to save small data in this bundle . it can maximum store 100kb , it varies from device to device.
+it stores value in key-value pairs.it gets automatically called between onPause() and onStop() .i.e. when the activity goes invisible.
+
+NOTE:- onSaveInstanceState()  can only help to save data in bundle if you change orientation of screen .
+               But if you press back button , then your activity gets destroyed , then there will be no states to save.
+
+Android documentation says , that data of widgets like radiobutton, edittext gets saved automatically by android but it is not guaranteed , so it will be good practise to save data manually.
+
+
+ @style/Widget.AppCompat.Button.Colored
+ 

@@ -1,0 +1,23 @@
+
+
+PENDING :
+
+1.Add a User Manual fragment and use menu item to navigate it.
+
+
+*******
+In code i have added the comment -> //inflate the layout 
+so be ready to answer about layout inflation/inflator.
+NOTE:- WHATEVER YOU'LL WRITE MAKE SURE YOU WILL HAVE AN ANSWER ON IT.
+
+
+
+VIEWMODEL READYMADE LINES
+//job to cancel all coroutines
+  //remove coroutines before cleanup
+//scope to run coroutines on particular thread
+
+
+
+**** i removed line for setting adapter from every filter observers bcoz adapter is already set and it's 
+value is not going to cange and it is declared as global  , so why to ressign it same value again and again  

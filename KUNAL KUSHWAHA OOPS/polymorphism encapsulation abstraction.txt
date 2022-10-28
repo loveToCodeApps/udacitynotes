@@ -1,0 +1,47 @@
+
+polymorphism occurs during inheritance
+
+1.static poly.- it is acheived via method overloading
+eg. multiple constructors
+At compile time, java determiens which method to be call
+
+2.dynamic poly.-it is achieved via method overriding
+ overriding means
+
+which particular method to run is determined by the object type by using dynamic method dispatch that's why it is called dynamic polymorphism.
+
+so 
+void Shapes shape=new Circle();
+means it will check that ref. var. is of type shape so it will check whether it has method called area() bcoz it dont know the class below it,
+if it exist then ok, and which method to be call is being determined by the object created using DYNAMIC METHOD DISPATCH at RUN TIME.
+
+final - 1.you cannot override a method that is declared as final.
+           2.if class make as final , that class cannot be inherited by anyone.
+
+EARLY BINDING - a call to one that resolves at compile time 
+LATE BINDING - a call to one that resolves at run time 
+
+
+static methods can be inherited but cannot be overriden.
+overriding depends upon objects , static does not depends upon objects , so static can't be override.
+
+NOTE :- METHOD OVERRIDING AND METHOD OVERLOADING ONLY APPLIES TO METHODS
+ AND NOT TO INSTANCE VARIABLES OR REFERENCE VARIABLES. 
+
+
+NOTE :- @Override is used to check whether a method is overriden from it's parent class or not , it's an annotation.
+
+
+	ABSTRACTION					ENCAPSULATION
+1.solves problem at design level			|	solves problem at implementation level
+					|
+2.hides unwanted details,while giving out most	|	hiding code and data into a single unit 
+  necessary details				|
+3.lets you focus on what an object does instead of 	|	hiding internal working of object
+  how it does				|
+
+
+IMP NOTE :- YOU CANNNOT OVERRIDE VARIABLES  .I.E YOU CAN ONLY OVERRIDE METHODS.
+
+	INHERITANCE				   POLYMORPHISM
+1.

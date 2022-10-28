@@ -1,0 +1,95 @@
+VIDEO 2 -Introduction
+Now in most application you have some data that you want to hold onto even when user closes or leaves application.
+eg. playlist,inventory of game items,records of income and expenses or sleep data over time.
+
+Room is a Database Library that is a part of Android Jetpack.
+Room is a database layer on top of the SQLite database.
+For the architechture for this lesson 's app , we connect livedata & viewmodel directly with the database.
+Atleast have basic understanding of SQLite databases.
+
+you will learn :-
+1.how to use Room to persist data.
+2.how to use DAO (Database Access Object) to map kotlin functions to SQL Queries.
+3.how to expand the architechture you use in the previous lesson to include a database. 
+4.how to make sure that your long running database operations don't slow down the app for user by using kotlin coroutines.
+
+video 3 -
+You use the SQL query language to interact with the database. Queries can be very complex, but there are four basic operations:
+
+1.Inserting rows
+2.Deleting rows
+3.Updating values in rows
+4.Retrieving rows that meet given criteria
+
+
+VIDEO 4 - Designing Entities 
+Now the first thing we need is Data , which in Kotlin and Android , is represented in Data Classes,
+and we need a way to act on that data and our database, which in Kotlin would be a function call.
+-However in DataBase World , in Room language , we need entities and queries. 
+-An entity represents an object or concept and it's properties that we want to store in the database. -  eg. student_table   or  annual_income_table
+-As such , an entity class defines a table , and each instance of that class represents a row in a table , and each property defines a column.
+-A common entity is a person , in our app, it's going to be one night of sleeping.
+-A query is a request for data or information from a database table or a combination of tables, 
+or request to perform some action on the data.
+Common queries are for getting,inserting , deleting entities. for eg . we could get all the sleep nights on record sorted by start time.
+
+Room makes things easy for us:
+-we define each entity as a Data class and the interaction as an interface,and then we use annotations to add metadata to both.
+-Room uses these annotated classes to create tables in a database and queries that act on the database.
+-so to work with Room Database , we need several types of annotated classes.
+-we use Data classes to define our tables and we use annotations to specify things such as which property represent the primary key.
+-We create interfaces that define how to interact with the database.
+-In case of Room such an object is annotated as a DAO or Data Access Object.
+For eg . a common entity is for a person with a unique ID that's often used as the primary key  first_name,last_name etc. 
+So you would have a person class with ID, names and additional information as properties.
+
+Now for the sleep tracker app , 
+we need an Entity that represents one night of sleep.For a night of sleep we want to record start time , the end time and quality rating, and
+we need an id to uniquely identify each night, which would simply look like this as simply a kotlin Data Class.
+
+----------------------------------------------------------------------------
+data class SleepNight  (
+    var nightId: Long = 0L,
+    val startTimeMilli: Long =  System.currentTimeMillis(),
+    var endTimeMilli: Long = startTimeMilli,
+    var sleepQuality: Int = -1
+)
+------------------------------------------------------------------------------
+
+To turn this into a description of an entity for a Room, we are going to annotate the class.
+we are annotating whole class with entity , bydefault the name of the table for storing instances of an entity is same as class name or we have it whatever we want.
+We define primary key , with annotation @Primarykey and if we pass parameter (autoGenerate=true) then system will generate a unique keys for us.
+We bannotate the remaining properties with the @ColumnInfo. The default name of the column is same as the variable name and we can change that by supplying parameter name.
+
+---------------------------------------------------------------------------
+@Entity(tableName = "daily_sleep_quality_table")
+data class SleepNight(
+    @PrimaryKey(autoGenerate = true)
+    var nightId: Long = 0L,
+
+    @ColumnInfo(name = "start_time_milli")
+    val startTimeMilli: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "end_time_milli")
+    var endTimeMilli: Long = startTimeMilli,
+
+    @ColumnInfo(name = "quality_rating")
+    var sleepQuality: Int = -1
+)
+--------------------------------------------------------------------------
+
+VIDEO 5
+To make sleepNight a class that room can use to create a table ,
+ we need to annotate it with the entity annotation.
+Our table gets a name byDefault based on our class name , but to give it a custom name we will pass parameters to @Entity annotations.
+
+now we need to identify primary key to room , it's mandatory , we will make nightid as primary key using annotation,
+nd as we wanted room to autogenerate key , we will pass a parameter to room saying ( autoGenerate=true )
+
+we will annotate remaining table columns with columnInfo and give each a parameter for a custom name.
+
+There are still more annotations , you can check them online.
+
+Now we have created table , so once run the app , to make sure that you didn't break anything in the app.
+
+VIDEO 6 - DAO (Data Access Object)

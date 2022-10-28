@@ -1,0 +1,18 @@
+#DDDD51
+
+Learnings
+
+notes:-
+
+1. for rename  ->   shift+F6
+2. when create gradient colors in drawable , angle should be multiple of 45 degree including 0
+ , or app will crash
+3.splash screen should max for 1000 ms , according to and.dev
+4.As we can drag-n-drop fragmentContainerView ,  we also get readymade NavHostFragment in editor.
+5.
+
+PROBLEM STATEMENT 
+i'm trying to put up button , but when i'm home screen , it is showing up button for splash screen , so eith we need
+to 1. disble action bar -> then it is ok  OR
+     2.use separate activity for splash screen , 
+     3. disavle up button only for home screen.

@@ -1,0 +1,16 @@
+
+
+2.10
+scrollview
+ can have only child view to scroll.or we can add a layout as a single child view which further can contain
+ multiple views.If you want to scroll only 1 view (for eg. Textview) u can directly put it in the scrollview.
+
+ 2.15 Data Binding
+to enable data binding , go in android section of app module level gradle and enable db =true & sync
+
+2.16 ---> data binding : data     (pending)
+
+doubt:-
+ setBackground vs setBackgroundResource
+
+

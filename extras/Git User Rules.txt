@@ -1,0 +1,25 @@
+How ot push project to Git ?
+1.make a new repo on github and copy it's url
+2.In pc , make a folder and initialise it with $ git init
+3.then add remote origin
+ $ git remote add origin URL
+and check it using 
+  $git remote -v
+4.then add files to folder in pc and $add & $commit the changes made
+5.then push changes to github
+  $git push origin master
+ that't it.
+
+
+NOTE:- 
+I added a ReadMe file in remote/online repo 
+so it gave me error for pushing from local to remote
+bcoz in remote/online i had ReadMe which wasn't in local folder
+so first i need to pull this changes: 
+	$ git pull origin master'
+hen you can push your local changes
+	$ git push origin master
+
+
+2. if you delete file in local repo and comit and push it ,
+then that file will not be visible in github but all the other commits related to it are visible with data.

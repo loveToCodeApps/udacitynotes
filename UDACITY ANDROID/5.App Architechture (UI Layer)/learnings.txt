@@ -1,0 +1,184 @@
+  ----------- LEARNINGS OF APP ARCHITECHTURE -------------------------------
+
+we are going to learn about 2 classes of Lifecycle Library:-
+1.ViewModel
+2.LiveData
+these 2 class will hide some complexity of Lifecycle and help to remove some errors.
+
+we will learn MVVP here
+
+video 5 - What is Architechture:-
+
+I'm trying to fit lot of unrelated functionalities into my one GameFragment class.
+For eg. i have got the logic for navigating , calculating the score and all the code for updating ui , all in that one fragment.
+If i started adding new features that requires saving data locally to a file(DataBases) or communicaing with the internet(Networking)
+I might conceivably put all of this code in GameFragment class. But this will result in bloated class that's doing all sorts of functions.
+Then there is configuration change issue, because fragments gets destroyed and rebuilt on rotation , they are not a particular safe place to have all of this data, bcoz data also gets destroyed along with the fragments.
+Now using onSavedInstanceState is a reasonable solution to the problem.But  onSavedInstanceBundles have their own issues.
+They requires extra code to store states  in bundles  and then the logic to retrieve that state , and they are also meant to be kept pretty small -> low below 100kb.Store too much data and you will get exception.
+This type of problems app architechture and Lifecycle library meant to solve.
+<--------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+Application Architechture:- is a way of designing your apps classes and the relationships between them , such that the codebase is more organized , performant in particular scenario and easier to work with.
+Much like architechting a house helps system wide up and helps to design diff. types of rooms , same architechture let's you do with code and classes. There is no one way to architect your application , much like there is no single
+way to architect your house.For eg . there is a house built for warmth in heavy snowfall , a house that uses natural resources with no lights , a castle to protect against enemies , 
+so architect depends upon circumstance, need and taste.As for houses there are many architechtures for app each with it's own strengths and weaknesses. Some of these styles
+may even overlap.We can check different architechture styles in github repository.It is dificult to cover all architechture styles in this lesson.
+So we going to learn style that is based upon MVVP Architechture for the rest of the lesson.
+
+
+
+
+video 6 -  OUR APP ARCHITECHTURE 
+As we have different rooms for diferent purposes in a house like kitchen, toilet, bedroom , studyRoom ,
+like that , while architecting an app we have classes for diff. purposes as well .
+The software design principle that we are going to be following called "seperation of concerns " which says
+that "an app should be divided into classes each that have separate responsibilities "
+Architechture gives u guidelines to figure out which classes should have what responsibilities in ur app.
+we are going to work with 3 diff. classes -  Ui Controller , LiveData , ViewModel
+
+1.UI CONTROLLER CLASS -  ui controller is the word that i'm using to describe what activities and fragments are.
+ui controller is responsible for any ui related tasks like displaying views and capturing user input.
+Now by design ui controller executes all of the draw commands that put our views on screen.Also when a operating
+system event happens like when a user presses a button it's the ui controller that gets notified first.But we
+want to limit ui controller to only user interface related tasks.you should take out any descision related power out of the ui controller.
+so while the ui controller is responsible only for drawing textview to the ui and not responsible for calculations/processing that decides that actually what to draw.
+And when the ui controller knows that the button has been pressed , it's gonna immediately that information along to the 
+second class in our architechture .i.e.ViewModel which will do the actual desicion making.
+
+2.VIEWMODEL CLASS - The purpose of viewModel is to hold specific data needed to display on  the fragments/activities it is associated with.
+Also ViewModels may do simple calculations or transformations on that data , so it's ready to be displayed by the ui controller 
+
+The viewModel class will contain instances of the third class .i.e. LIVEDATA .  WE WILL GET INTO THIS IN WHILE , but you need to know
+that LIVEDATA is crucial for communicationg information from VIEWMODEL  to UI CONTROLLER that it should update and re-draw the screen.
+
+IN OUR CASE , the UI CONTROLLERS will be our 3 fragments :-  
+eg. Game_Fragment ,  it will be responsible for drawing the game elements to the screen and knowing when the user presses the button and nothing more.
+when user will press the button Game_Fragment will pass that information along with the GameViewModel.
+The GameViewModel  will hold the information like score , list of words , current word because that's the data needed to know what to display on the screen.
+It will also be in-charge of simple calculations to decide the current state of data . for eg. what is the current word from the list of words , and what is the current score 
+This is what u learn how implement in this lesson.
+In future you will see that there are more classes in this architechture once you add to learn Databases and Networking.
+ 
+Video 7 - ViewModel
+First step of converting Guess_It(App) to this architechture will be creating a ViewModel. ViewModel is an abstract class that you first extend and then implement.
+It holds your app's ui data and survives configuration changes.
+Right now all o your Ui data is in your fragment , and when your app undergoes any configuration change such as rotation of phone  activity and all the fragments inside it gets destroyed 
+and get's rebuilt by the OS. Which means unless you do something the data is lost.We have already seen that onSavedInstanceState  is the not right solution if there is lot of complicated data.
+
+So entering the ViewModel , instead of having ui data in the fragment , move it to the ViewModel and have fragment reference the ViewModel.
+The ViewModel survives the configuratio changes.So when the fragment gets destroyed and rebuilt , all the data to display on fragment like score, current word etc.
+will remain in the ViewModel.If you re-connect your same recreated fragment to your same ViewModel , all of the data is right just there for you.
+Unlike onSavedInstanceState  you have no restrictions on size , so you can save lots of data in ViewModel.  
+
+
+Video 8 - Create an GameViewModel
+
+in this first you going to add first ViewModel to your code , like ViewModel to your Game Screen.ViewModels are meant for or associated with single fragment or activity.
+Since the GameFragment  is pretty complex we are going to add , we will start by making a ViewModel for this fragment.
+To do that :
+1.Add gradle dependancy   and  sync . 
+In Module level gradle add androidx lifecycle-extensions dependency.
+This is what contains ViewModel & LiveData.
+
+// Lifecycles
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+2.then create a viewmodel class.
+
+a.in java directory ,  make a new GameViewModel.kt  kotlin file.
+b.then create a GameViewModel class and extend it with ViewModel()  class.
+c.write a init block with Printing a log statement that says GameViewModel created 
+ViewModels gets destroyed with fragment/activity that the ViewModel is associated with  is finally and completely destroyed.Right before this happens ,
+there is a callback called in the ViewModel called " onCleared() " .
+We will also implement the onCleared()  to keep track of lifetime of  this viewmodel.
+so we will override onCleared() by pressing ctrl+o  and write log statement with TAG -> "GameViewModel" and MSG -> GameViewModel Destroyed.
+3.finally associate ui controller of fragment with your ViewModel
+
+finally in order to use this ViewModel we will go to GameFragment and make sure that fragment knows about it.
+
+1. open GameFreagment 
+2.make field for GameViewModel 
+	private lateinit var viewModel:GameViewModel
+3.in onCreateView()
+ here i'm gonna get reference to GameViewModel, you never construct  ViewModel yourselves , if u did then u end up creating ViewModel everytime the fragments recreated which wouldn't solve our rotation issue.
+so instead Lifecycle Library creates ViewModel for you request it from class called ViewModelProvider , which provides you coreect ViewModel.
+
+   viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+first time this line gets executed ,  and you request a GameViewModel from ViewModelProvider it will create a new instance of GameViewModel for you.
+And that instance of GameViewModel is gonna  associate with the class that you pass in here (in our case we given :this).
+When ViewProviderModel is called again it will return a reference to pre-existing GameViewModel associated with this UI Controller.This is what reestablishes connection to the same ViewModel.
+and we will add a Log statement saying  " called ViewModelProviders.of() " .
+
+   Video 9 - what belongs in the GameViewModel
+we have viewmodel , now we just need to know , what code weactually  put it in.
+our GameFragment should only contain the code needed to display proper values on screen and the code wich captures user events.
+It shouldn't hold the ui data that we want to survive rotation and it should not contain any code that processes data.
+and 
+ViewModel should never contain references to fragments , activities or views.
+
+video 10 - populate the GameViewModel
+
+figuring out what goes into UI Controller and what goes into ViewModel can be tricky.
+you should remeber general rules of them 
+1. viewmodels holds data for ui
+2.ui controller should have his little responsibilty a possible , which means they shouls only draw things on screen and only capture input events.
+3.ui controller shouldn't do any actual data processing or any desicion making
+4.ui controller is the one that contains and instantiates the views
+5.ViewModel should never contain the references to the activities, fragments or views. Now you might be wondering why?
+so remember that big reason for using ViewModel is that they survive configuration changes.By nature activities , fragments , views don't  survive configuration changes.
+So if you were to say hold on to a reference that activity , fragment or view that is no longer to been displayed on the screen because it was lost due to a configuration change , you are now holding on to a reference 
+that to something that should have been cleaned up.In best case scenario this is minor memory leak. In worst case scenario you try to do somethingwith an old fragment that is not on screen and that's an error.
+Now with the rules above in mind we will move some code to ViewModel :-   (Watch The Video For This and Practise)
+
+We will not move lateinit var binding:FragmentGameBinding
+becoz it holds references to all the views
+and also it is used set onClickListners.
+NOTE- Setting onClickListners and setting up UI is solely responsibility of GameFragment
+	All navigation related tasks should be done in fragment and not in the ViewModel.
+
+
+Video 11 - Benefits of good architechture
+now that you've had your first taste of dividing the code into different classes.
+To follow an architecture.
+Let's go ahead and touch on a few reasons why this is better than putting everything into your fragment as
+discussed.
+The separation of concerns , Design principle helps us in two ways.
+1.
+the code is more organized manageable and debuggable.
+2.
+by moving code to the view model.
+You protect yourself from having to worry about lifecycle problems and bugs.
+Another aspect of this design is that the code is very modular.
+Notice how this arrow has a direction,
+which means that the UI controller knows about the view model,
+but the view model doesn't know about the UI controller.
+As we build off of this architecture,
+we're going to map out uni directional relationships like this between more and more classes.
+One of the goals of this architecture is to keep the number of references between classes small.
+This modularity allows us to swap out a single class for different implementation without needing to
+update a bunch of other classes in your app.
+For example,
+you could redesign the UI and you wouldn't necessarily need to make changes to the View model.
+Another aspect and benefit of this architecture is that the view model contains no references to
+activities,
+fragments or views.
+This happens to be helpful for testing.
+You might have noticed that in your project there are two directories with test of the name.
+You've got android test and test.
+Testing on android differentiates between tests that can be run without emulating the android
+framework which are in the test folder and tests that are more heavyweight that require
+emulating the android framework.
+These tests can be found in the android test folder by deciding your app ,  so that these android classes
+aren't referenced in the view model.
+You can run pure lightweight unit tests that don't depend on the android framework code and therefore
+run faster and are easier to write.
+So to summarize splitting the code into a defined architecture helps you because it separates out
+concerns,
+which makes your code more organized and easier to debug.
+Another benefit is that you can move code out of the UI controller into classes like View model,
+where you don't need to worry as much about the android lifecycle.
+Also,
+the code is more modular,
+which makes it easier to swap out and update sections of code and finally the code is easier to
+test.
+

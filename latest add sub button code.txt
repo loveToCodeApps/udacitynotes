@@ -1,0 +1,50 @@
+code of subtraction button is here =-------------------------------------------------
+
+ var dividend = binding.t2.text.toString().toInt()
+            operation='-'
+            if(binding.t1.length()<1) {
+                result = result + Integer.parseInt(binding.t2.text.toString())
+            }
+            else
+            {
+                if(state=='+')
+                {
+                    result=result+Integer.parseInt(binding.t2.text.toString());
+                }
+                if(state=='-')
+                {
+                    result=result-Integer.parseInt(binding.t2.text.toString());
+                }
+                if(state=='*')
+                {
+                    result=result*Integer.parseInt(binding.t2.text.toString());
+                }
+                if(state=='/' && dividend!=0)
+                {
+                    result=result/Integer.parseInt(binding.t2.text.toString());
+                }
+
+
+                // result=result-Integer.parseInt(binding.t2.text.toString())
+            }
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"-"
+            binding.t2.text=""
+            state='-'
+
+
+
+
+
+
+code for addition button here ----------------------------------------------------------------------
+
+
+
+
+  operation='+'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"+"
+            result=result+Integer.parseInt(binding.t2.text.toString())
+
+            binding.t2.text=""
+            state='+'
+

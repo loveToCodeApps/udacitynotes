@@ -1,0 +1,34 @@
+C:\Users\shail\AppData\Local\Android\Sdk
+
+
+onsaveinstancestate()  is get called when activity goes in background. i.e. onStop()
+and recovers data from bundle when activity comes in foreground.i.e onStart()/onRestart()
+
+Bundle is just a collection of key-value pairs.
+key will always be a string
+we can generally store only about 100kb data in a bundle , if more then it will give 
+transactionTooLargeException
+
+onSaveInstanceState is used to store data in bundle and recover/restore it when:
+1.you rotate your phone(here our app is in foreground)
+2.OS shuts down / kill activity process to allocate resources to ongoing apps(here our app will be in background)
+
+
+override fun onCreate(savedInstanceState: Bundle?) {}
+Above , the bundle in which we will store store data , is passed in here above.
+so if we are freshly creating an activity , we will have this bundle empty,
+so by that logic , we will first check if it is null, by condion
+
+if(savedInstanceState!=null)
+{
+}
+ and if OS is recreating activity, then it will restore this bundle values
+
+
+NOTE:- We are writing restoring bundle code in onCreate() because when we rotate
+ phone/ when OS shuts down activity to allocate memory to other ongoing app and 
+when we again get app on foreground  the activity gets created again .i.e. onCreate() 
+gets called. 
+
+
+

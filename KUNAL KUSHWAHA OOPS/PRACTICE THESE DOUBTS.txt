@@ -1,0 +1,8 @@
+    practice Remaining :-
+
+1. singleton class - class that can have only one object.
+2. calling a constructor from another constructor.
+3.why we cant have static variable in a static method ? 
+4. passing object as parameter in child constructor(VIMP ALSO CHECK HOW SUPER() CONSTRUCTOR WORKS , I KNOW
+THAT BUT STILL AGAIN REVISE I , VERY COOL STUFF)
+

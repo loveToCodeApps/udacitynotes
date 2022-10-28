@@ -1,0 +1,55 @@
+Lesson 14 - MultiThreading
+
+Now that were all fired up. We can add some action. When the start button is pressed, we want to create a new sleep night and store it in the database. When a stop button is pressed, we want to update the night with the end time. When the clear button is pressed, we want to erase what's in the database. This can take along time when the database has alot of data, imagine a few years worth of sleep data. So this long-running operation should run on a separate thread.
+
+ And as promised we are going to talk about threads and to make sure everyone is on asimilar page. I'm just going to quickly recap Mobile devices have processors and these days, most of them have multiple Hardware processors. That each run processes. Concurrently this is called multi processing to use processors more efficiently. The operating system can enable an application to create more than one thread of execution within a process.
+
+ This is called multi-threading. You can think of it as reading multiple books at the same time switching between books after each chapter Der eventually finishing all books but youcan't read in more than one book at the same time. You the reader represents a processor and each book represents code that needs to be executed and the act of reading each book, represents a thread of execution. Now
+
+there is a lot of infrastructure to manage. All those threats needing to run sometimes in agiven order and finish to. For example there is a schedule which as the name indicates Indicates takes into account things such as priorities and makes sure all the threads get to run and finish. No, book is allowed to sit in a she'll forever and gather dust. But if abook is very long or can wait, it may take awhile before it gets sent to yourway and there's this dispatcher
+
+which sets up threads that is. It sends your books that you need to read and specifies acontext for that to happen in. You can think of the context as a separate specialized reading room. Some contexts are best for user interface stuff and some are specialized to deal with input/output operations. The only other thing to know is that a user facing application? Usually has amain thread that runs in aforeground
+
+and can dispatch other threads that may run in the background. Now, on Android, the main thread is a single thread that handles all updates. To the UI, themain thread is also the thread that calls all click. And other UI and lifecycle callbacks, this is why it's also called the UI thread. The UI thread is a default thread meaning, unless you explicitly switch threads or use a class that runs on adifferent thread.
+
+Everything you do is on the main thread, this creates a potential challenge because the UI thread has to run smoothly to guarantee agreat user experience. You see for your app to display to the user without any visible pauses, the main thread has to update the screen, every 16 milliseconds, or more often or at about 60 frames per second at this speed. Humans perceive the change of frames as completely smooth.
+
+ That's a lot of frames and little time therefore on Android. It's essential to avoid blocking the UI is Right. Blocking in this context means the UI thread is. Waiting not doing anything at all for an action to bedone. For example, something like a database to be done, updating many common tasks, take longer than 16 milliseconds such as fetching data from the internet, reading a large file or writing data to a database there for calling code.
+
+Like this from the main thread can cause the app to pass stutter or even freeze. If you block the main thread for too long, the app may even Crash and present an application, not responding dialog. So we should never perform long-running operations on the main or UI thread. So what are our options? Welcome co-routines.
+
+
+
+
+
+
+
+
+Lesson 15 - Coroutines
+
+
+So we have several options in how we can get work. Done away from the main thread, a pattern for performing long, running tasks, without blocking the main thread is callbacks by using callbacks, you can start long running tasks on a background thread. When the task completes the Callback supplied as an argument is called to inform you of the result on the main thread, callbacks are a great pattern. However, they Theyhave a few drawbacks
+
+codes that heavily uses callbacks can become hard to read and harder to reason about because while the code looks sequential, the car back code will run at some synchronous time in the future. In addition, callbacks don't allow the use of some language features such as exceptions in kotlin. We have co-routines to handle long, running tasks, elegantly and efficiently.
+
+Kathlyn curtains, let you convert, callback based code to sequential code, code. Written sequentially is typically easier to read and can even use language features such as exceptions but wait, call backs can use exceptions. Well, there is no way to Signal an error from a long-running task with exceptions. When coding in the Callback style as flow, control has already
+
+left the functions that registered to theCallback. Because the Callback is not typically called by the application code, callbacks need to pass errors, we are another exception Handler sometimes called an airbag or a result object, which can be success or failure. So, the ability that co-routines can signal errors with exceptions is very helpful. And once more simplifies, the
+
+Code in the end coverton's and call back to exactly the same thing. Wait until a result is available from a long-running task and continue execution. However, in cold, they look very different. So, curtains and cuddling have a few characteristics. They are a synchronous non-blocking and use suspend functions to make a synchronous code sequential.
+
+ What does that mean? As synchronous means that the quarantine runs independently from the main execution steps of your program. This could be in parallel on a separate processor but it's also be that while the rest of the app is, for example, waiting for input, we sneak in abit. Of processing. One ofthe important aspects of a sink is that we cannot expect. The result is available to us
+
+until we explicitly. Wait for it. For example, let's say you have aquestion that requires some research and you ask acolleague to find you, the answer, they go off and work on it, which is asynchronously and on a separate thread, unless you wait for the answer, you can continue to do other work. That Not depend on their answer until they come back and tell you what the answer is non-blocking means that we are not blocking the main or UI thread.
+
+ So users will always always have the smoothest possible experience because the UI interaction will always have priority because our coroutine code is compiled from sequential code. We don't need to specify callbacks and for co-routines the I love will make sure the results of the coroutine are available before continuing or resuming. The keyword suspend is copland's way of marking a function
+
+or function type available to co-routines. When a curtain calls a function marked resuspend, instead of blocking until that function returns like anormal function, call, it suspends execution until the result is ready. Then it resumes where it left off with the result. Now, while it's suspended, waiting for aresult, it unblocks the thread that it's running on, so other functions or co-routines can run
+
+So the difference between blocking and suspending is that if a thread is blocked, no other work happens if the thread is suspended. Other work happens until the result is available. Be aware that the suspend key work does not specify. The thread code runs on suspend functions may run on a background thread or domains read now, to use, co-routines and Kathleen.
+
+ You need the following pieces. A job at this Patcher and a scope. Basically a job is anything that can be cancelled, all co-routines have ajob and you can use it to cancel the coroutine. Jobs can be arranged into parent-child hierarchies so that cancellation of a parent leads to an immediate cancellation of all its children, which is a lot more convenient than if we had to do this manually for each curtain.
+
+ The dispatcher sends of co-routines to run on various threats. For example this Richard of Maine, will run tests on the main thread and dispatcher dot IO is for offloading blocking I/O tasks to a shared pool of threads, the scope combines information, including a job, and dispatcher to define the context in which the coroutine rents Scopes keep track of coverton's.
+
+When you launch a coroutine, it's in scope. Which means that you've said, which scope will keep track of thecoverton, Now, if you want amore in-depth technical explanation, I'm linking a great code lab written by one of our coroutine experts and fellow instructors Sean and also the official documentation. So let's use some courage jeans and dive into the details of how to use them in code.

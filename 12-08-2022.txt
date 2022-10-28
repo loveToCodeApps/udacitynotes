@@ -1,0 +1,16 @@
+1.We can think of fragment as a portion of UI of that activity.
+2.up button works same as back button of android os , but up button should not be present on home screen (bcoz it's task i to traverse back on previously visited screens of that app**) or
+starting screen  to put user outside of the app , becoz  we already have back button. 
+3.Action Bar is for app branding & tells on which screen we are(eg.home,notification,settings etc.)
+4.overflow menu is a dropdown to reach some navigation destinations.
+5.Android introduced fragments in API Level 11.
+
+video 3.4
+The activity acts as a frame that contains ui fragments and can provide ui elements that surround the fragment
+UI fragments generally operate like a view within activity's layout.
+we may implement most ui logic in fragments but OS only has access to activities , so activity is the entry pt to OS.without activity u can't access fragments.
+
+
+3.12  backstack manipulation :-
+I don't get diiference between popUpTo & PopUpToInclusive.
+ 

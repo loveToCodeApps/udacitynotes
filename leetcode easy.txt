@@ -1,0 +1,181 @@
+DFDFFEF
+dfsfef
+LEETCODE ARRAY EASY
+program to return the nearest position to zero 
+
+  class Solution {
+    public int findClosestNumber(int[] nums) {
+        
+        int[] numsdo={-4,-2,1,4,8};
+        int[] counts=new int[5];
+        
+        for(int i=0;i<5;i++)
+        {
+            int counter=0;
+            while(numsdo[i]!=0)
+            {
+                if(numsdo[i]>0)
+                {
+                    numsdo[i]--;
+                    counter++;
+                }
+                else if(numsdo[i]<0)
+                {
+                    numsdo[i]++;
+                    counter++;
+                }
+                else if(numsdo[i]==0)
+                {
+                    counter=0;
+                }
+                counts[i]=counter;
+            }
+            
+            
+        }
+        
+        for(int i=0;i<5;i++)
+        {
+            int temp;
+            int ind;
+            if(counts[i]<counts[i++])
+            {
+                temp=counts[i];
+                ind=i;
+            }
+            else
+            {
+                temp=counts[i++];
+            ind=i;
+            }
+       
+            
+        }
+        return 1;
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+    public int findClosestNumber(int[] nums) {
+        
+        int[] numsdo={-4,-2,1,4,8};
+        int[] counts=new int[5];
+        int boom=0;
+        for(int i=0;i<5;i++)
+        {
+            int counter=0;
+            while(numsdo[i]!=0)
+            {
+                if(numsdo[i]>0)
+                {
+                    numsdo[i]--;
+                    counter++;
+                }
+                else if(numsdo[i]<0)
+                {
+                    numsdo[i]++;
+                    counter++;
+                }
+                else if(numsdo[i]==0)
+                {
+                    counter=0;
+                    break;
+                }
+               
+            }
+            
+             counts[i]=counter;
+        }
+        
+        for(int i=0;i<4;i++)
+        {
+            int temp=0;
+            int ind;
+            if(counts[i]<counts[i++])
+            {
+                temp=counts[i];
+                ind=i;
+                boom=temp;
+            }
+            else
+            {
+                temp=counts[i++];
+            ind=i;
+                boom=temp;
+            }
+       
+            
+        }
+        return boom;
+        
+    }
+}
+
+
+5  3  2  8  1  9  
+
+2 5 3 1 8 67 0
+
+
+new solution 
+
+class Solution {
+    public int findClosestNumber(int[] nums) {
+        int[] numsdo={-4,-2,1,4,8};
+        int[] counts=new int[5];
+        int smallest=-2;
+        
+        for(int i=0;i<5;i++)
+        {
+            if(numsdo[i]!=0)
+            {
+                int counter=0;
+                while(numsdo[i]!=0)
+                {
+                    if(numsdo[i]>0)
+                    {
+                        numsdo[i]--;
+                    counter++;
+                    }
+                    else
+                    {
+                        numsdo[i]++;
+                        counter++;
+                    }
+                }
+                counts[i]=counter;
+                
+            }
+            else{
+                counts[i]=0;
+                
+            }
+            }
+        // now find smallest number from counts
+        int min = counts[0];
+      
+        for (int i = 0; i < 5; i++) {
+          
+            if(counts[i] <min)
+                min = counts[i];
+            smallest=min;
+        }
+
+        return smallest;
+    }
+}

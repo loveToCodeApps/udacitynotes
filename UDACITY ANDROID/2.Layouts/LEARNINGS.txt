@@ -1,0 +1,24 @@
+we need to refactor the id name of any view if we want to modify id of any view.
+refactoring is important becoz we want to change it everywhere we use it, 
+2 ways to do it:-
+1.in xml code , right click on id and click on refactor.
+2.in properties panel directly change and click on refactor.
+
+
+in visibility property of any view:-
+  invisibilty- view is not visible but still takes space on ui
+  gone- view not visible + don't occupy ui space.
+
+
+
+DATA BINDING :-
+At compile time , data binding generates a binding class which is a helper class used to access views from activity/fragment when it is created without needing to traverse whole hierarchy of views.
+
+
+IMP CONCEPTS
+1. binding.apply()
+2.invalidateAll()
+
+
+
+

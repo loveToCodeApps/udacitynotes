@@ -1,0 +1,78 @@
+10-08-2022
+
+video 1.9
+1.we have project view of our app , that's how actually files are stored in our system.
+Android view of project is built for developers for easy access to files.
+2.In manifest file, you u didn't register ur activity then OS will don't know about ur activity's existance  and ur app will crash.
+3.Manifest file includes essential information about application that OS needs to know about to actually be able to
+run ur app. Here we need to find permissions that we will use in app. eg . permission to read contact details, send data over
+internet and hardware access like using device camera.
+4.Gradle scripts generates installabel file known as "APK".
+
+video 1.11:-
+mainActivity is an example of an activity .An activity is a core android class which is responsible for drawing an app ui and receiving
+user input events.Activities have an associated layout file . eg. activity_main.
+Layout files tells that how app looks like.
+The activity and the layout are connected by a process known as layout inflation.
+This process is triggered when activity starts.
+During layout inflation the views defined in the xml layout files are turned /inflated into kotlin view objects in memory.
+once this happens , the activity can then draw these objects to screen and also dynamically modify them.
+
+since the activity is responsible for the interactive part of the app it defines what actually happens when the button is pressed,
+and it can then do things like dynamically update this dice image object(.i.e. changing dice images) .
+
+
+
+video 1.12 :-
+In MainActivity , MainActivity extends AppCompatActivity.
+AppCompatActivity  is a subclass of android that gives us access to modern android features while preventing 
+backwards compatibility with older versions of android.
+Functionally what u should always do is use AppCompatActivity  to make ur app available to he largest number of devices and users
+possible.
+
+Now many prog.Languages use main method that defines where the program starts.Android doesn't have 
+a main method.Instead in manifest file , it defines the MainActivity as the launching point for your application.
+Activities do not use a constructor to do their setup .Instead a series of predefined methods are called as part of setup.
+One of the method is onCreate().
+In onCreate() , you will need to specify which layout is associated with the activity and you'll also need to inflate it.
+The setContentView() method does both of these things(tells related layout + inflate it).
+
+Now in activity_main.xml
+The layout defines the elements of our design,their position and their properties.In android these elements are called views.
+eg of views . TextView,Button,RadioButton,ChechBox etc.
+The views themselves are defined by the tags that we see here and properties of views are defined by the attributes that are inside of those tags.       
+
+video 1.23:-
+It s logical that we can't initialize ImageView before it gets inflated.(views of layout are not accessible in memory until they have been inflated by setContentView ).so we can't initialize it before setContentView().
+
+we made a function that always calls findviewbyid , .i.e. everytime  it is searching that view hierarchy which is an expensive operation.
+DiceRoller is an small app but in complicated app if we continuously keeep calling findviewbyid & keep traverse view
+hierarchy on small hone it will lag & slow down phone.so we will store dice Imageview  in  a field.Now we are not calling findViewById everytime it will improve performance.
+  
+we can make it null but it will complicate our code , as we need to make null checks everytime.
+A common pattern of initializing non-null variables in onCreate is to use lateinit keyword.
+
+
+
+1.24:-
+Namespaces
+
+tools:src:-
+tools namespace is used when you want to find dummy content that is only used when you're previewing the app 
+in the preview pane.Attributes using tools namespace are removed when you actually compiled the app.
+
+1.25:-
+	Introduction to gradle---->
+when we click on run button , a series of gradle commands compiles ur source code, your dependancies,and any associated resources into a android application package or APK.
+An APK is an file format that is used to distribute and install android applications.
+After it's built by gradle, Android Studio transfers APK to the physical device or emulator , and installs that APK 
+and runs it.
+we have 2 gradle files:
+1.project level: for project wild build settings.
+2.specific gradle file for each module of ur project.Modules are collection of source files and buildsettings for discrete unit of functionality in your app.
+Currently we have only 1 module.In complex application we may have more modules that each will have it's own seperate gradle files. 
+
+
+VIDEO 26,27,28   are pending ---->  and are very important.
+NOTE :- "Inflation" is a term that refers to parsing XML and turning it into UI-oriented data structures. 
+  

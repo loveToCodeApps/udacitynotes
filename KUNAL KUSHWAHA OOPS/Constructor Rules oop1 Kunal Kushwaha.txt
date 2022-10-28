@@ -1,0 +1,53 @@
+ Constructor Overloading Rules
+
+1. If we initialized variables in class definition and also initialized variables in 
+bydefault constructor , then it bind values from the bydefault constructor that we rewritten.
+
+2. If we defined bydefault constructor  and a parameterized constructor 
+and we delete bydefault constructor from class definition then while creating 
+new object if we use empty constructor then it will give error and ask for 
+the arguments of the paeameterized constructor.
+
+3. If we initialized variables in one class definition then while printing it in other class's main() method
+will show initialzied variable values and not the default values like 0,null,0.0,false etc.
+
+4. If in parameterized constructor definition ,if we use parameters name same as instance variable
+then it will make a confusion and will return default values like null,0 ,false,0.0 If in parameterized constructor definition ,if we use parameters name same as instance variable
+then,  use 'this' keyword with instance variable as shown below:
+
+
+
+ for example :-- 
+student(int roll,String name,float marks )
+    {
+        this.roll=roll;
+        this.name=name;
+        this.marks=marks;
+    } 
+
+solution:-
+1. use different names for parameters.
+2. use this keyword for instance variables.
+
+5. If in parameterized constructor definition ,if we use parameters name same as instance variable
+and also in main() method if we pass local variables of main() whose name is same as instance variables and parameters of constructor then it will create confusion 
+and will return default values like null,0.0,0 etc
+but to avoid this you can use this keyword but it is a bad practice to use same name of parameters.
+ 
+note:- but if you already have initialized the instance varibles in class definition then in above 4) and 5) 
+instead of returning default values of null,0,0.0,false  it will return instance variables values that u initialized.
+
+6.  // passing object as the parameters in constructor.
+    student(student stud2)
+    {
+    this.roll=stud2.roll;
+    this.name=stud2.name;       <----- Here 
+    this.marks=stud2.marks;
+    }
+
+7. 
+// in method we can just write name  i.e. we can skip this keyword
+    void message()
+    {
+        System.out.println("hello" + this.name);   or    System.out.println("hello" +  name);
+    }

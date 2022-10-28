@@ -1,0 +1,19 @@
+1.make new project
+2.make new activity only for splash screen
+3.add color , font , drawable resources
+4.change app logo in manifest file
+5.make splash screen
+6****.change color of progress bar by copying and pating and editing same theme and add new color and delete other prop,
+and change name of theme and in progress bar add attribute theme=new_theme.
+7.In Floating action button , to set icon color ,
+ -> use app:tint ,   android:tint will not work.
+
+
+
+
+
+
+
+NOTES:-
+1.when we create binding variable  for activity ,  it's type should always start with Activity.
+eg for activity SplashScreen , inding datatype will be  ActivitySplashScreenBinding.

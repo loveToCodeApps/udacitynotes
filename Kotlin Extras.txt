@@ -1,0 +1,159 @@
+
+Kotlin Extras
+
+1.if we ar using nullable dt's 
+.i.e.  var num:Int?=12 
+then while using them with operators like if(num>10)
+you must first provide null-check statement 
+eg. 
+ if(num!=null)    // This null check vimp
+{
+ if(num>10)
+ {
+   println("it's greater") 
+ }
+ else
+ {
+   println("not greater")
+ }
+
+}
+
+2. It is not compulsory to use "else" statement at the end of when statement
+which is same as default in switch case statement.
+
+3.'if' must have both main and 'else' branches if used as an expression
+eg.
+    var dental:String=if(roll==25) "Hello World"   // gives error
+    var dental:String=if(roll==25) "Hello World" else "Good World"
+
+4.Single expression function
+eg.
+fun greetings(msg:String,name:String)=println("$msg $name")
+
+fun greetings(msg:String,name:String):String=return "$msg $name"
+
+5.
+
+just see
+
+fun sum(one:Float,two:Float)
+{
+    var sum: Float =one+two
+    println(sum)
+}
+fun main()
+{
+sum(3.1f,4.6f)
+}
+
+
+6.
+arrays equal or not
+var arr= arrayOf("sagar","prasad","manav","aniket","shubham")
+    var arr2= arrayOf("sagar","prasad","manav","aniket","shubham")
+
+arr.equals(arr2)  //false
+arr==arr2           //false
+arr.contentEquals(arr2))  //true
+why?
+
+  var arr= arrayOf("sagar","prasad","manav","aniket","shubham")
+    var arr2= arr
+arr.equals(arr2)  //true
+
+7.
+
+   // creating array
+    var arr= arrayOf("sagar","prasad","manav","aniket","shubham")
+    var arr2= arr
+   println(arr.size)
+    println(arr.get(1))      //first element
+    println(arr[1])          //first element
+    println(arr.equals(arr2))
+    println(arr.set(2,"manas"))
+    arr.forEach { 
+        println(it)
+    }
+
+
+8. forEachIndexed  loop 
+
+arr.forEachIndexed { index, item ->
+     if(index==2)
+     println("$item is present at index $index")
+ }
+
+9.giving datatype to list
+ var list:String= listOf(1.toString(),"kunal kushwaha")   //Error
+ var list= listOf<String>(1.toString(),"kunal kushwaha")  //Correct
+
+10. printing map in following format :   [key1=value1,key2=value=2,...key.n=value.n]
+for this we use entries
+println(mymap.entries)
+
+11. There is no need to follow any datatypes pattern in maps if u didn't set DT of map
+eg.
+var map= mapOf(1 to "burger",1.2f to "pizza","brand" to "win")
+    println(map.entries)
+
+but if set DT of map like :-
+var map= mapOf<Int,string>()
+    println(map.entries)
+Then you must use Integer key and a String value.
+
+12. 
+fun main() {
+   var m1=Name("kunal","kushwaha")
+println("my name is ${m1.one} ${m1.two}")
+}
+Class Name(first:String,last:String)
+{
+   var one:String=first
+   var two:String=last
+}
+
+13.Properties in kotlin will get getters and setters generated for them automatically by the compiler.
+If your property is a var it will have its getter and setter generated.If your proerty is a val it will have only getter generated, becoz you can't
+reassign a val.
+But what if we don't want to rely on default behaviour of these getter and setter and want to do some complex behavour.so , we can 
+override behaviour of these default getter & setter.
+so, let's log message out every time we set a new name:-
+	
+    eg. 
+  fun main()
+{
+var m1=MyLesson()
+println(m1.name)
+   m1.name="alex"
+   m1.name="bruce"
+   m1.name="wires"
+
+}
+
+class MyLesson
+{
+  var name:String="sagar thorat"
+     
+     // changing default behaviour of getter and setter of properties
+       set(value) {
+          field=value
+          println("updated value $field")
+       }
+       get() {
+          println("My name is $field")
+          return field
+       }
+  
+
+14.
+var nickname:String=if(name!=null) name else "no nickname"
+SHORTHAND METHOD Using Elvis Operator (?:)
+var nickname:String=name ?: "no nickname"
+// ?:  tells that if LHS is not null then return it otherwise return RHS.
+
+15.  	
+	In kotlin classes,methods,functions are public by-default.
+
+	classes are public and final bydefault.so u can't inherit them.To make them inheritable declare them with
+	keyword "open" 

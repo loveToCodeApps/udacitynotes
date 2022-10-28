@@ -1,0 +1,93 @@
+ binding.plus.setOnClickListener {
+            operation='+'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"+"
+            result=result+Integer.parseInt(binding.t2.text.toString())
+
+            binding.t2.text=""
+        }
+
+  binding.button8.setOnClickListener {
+            operation='-'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"-"
+            if(binding.t1.length()<1) {
+                result = result + Integer.parseInt(binding.t2.text.toString())
+            }
+            else
+            {
+                result=result-Integer.parseInt(binding.t2.text.toString())
+            }
+            binding.t2.text=""
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. if t1.text= empty then result=result+t2.text
+
+
+
+
+
+
+
+
+  binding.plus.setOnClickListener {
+            operation='+'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"+"
+            result=result+Integer.parseInt(binding.t2.text.toString())
+
+            binding.t2.text=""
+            state='+'
+        }
+
+
+
+        binding.button8.setOnClickListener {
+            operation='-'
+            if(binding.t1.length()<1) {
+                result = result + Integer.parseInt(binding.t2.text.toString())
+            }
+            else
+            {
+                result=result-Integer.parseInt(binding.t2.text.toString())
+            }
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"-"
+            binding.t2.text=""
+            state='-'
+        }
+        binding.mul.setOnClickListener {
+            if(binding.t1.length()<1)
+            {
+                result=1
+
+            }
+            operation='*'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"*"
+            result=result*Integer.parseInt(binding.t2.text.toString())
+
+            binding.t2.text=""
+
+        }
+        binding.div.setOnClickListener {
+            operation='/'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"/"
+            result=result+Integer.parseInt(binding.t2.text.toString())
+
+            binding.t2.text=""
+        }
+        binding.remainder.setOnClickListener {
+            operation='%'
+            binding.t1.text=binding.t1.text.toString()+binding.t2.text.toString()+"%"
+            result=result+Integer.parseInt(binding.t2.text.toString())
+
+            binding.t2.text=""
+        }

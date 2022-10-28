@@ -1,0 +1,6 @@
+INTERFACES  
+what is the advantage of the interface over classes ?
+  --> when we call a function from a child class which(function) exists in parent , then at compile time both parent and child class needs to be present.
+In this way to avail more and more functions to all child classes , functions are pushed above and above which creates a very long hierarchy.
+But in interface you just need to implement iterface in child class / sub class that's it.so interfaces are not in the hierarchies of the classes.
+2.Two unrelated class can implement same interface whoever their parents are.

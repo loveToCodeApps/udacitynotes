@@ -1,0 +1,355 @@
+
+
+
+
+
+Application Architechture 
+	:- is a great set of rules to design an app.
+Architechture provides basic bones and structure of your app.
+A well thought out architechture can make ur code maintainable for years & help teams to collaborate.
+
+video 5 -    What is Architechture ? 
+ VIMP VIMP VIMP VIMP VIMP VIMP VIMP VIMP
+
+We are fitting much information in one single class , like logic of calculations, updating ui, navigation,
+database code, internet connection code , then this class will become bloated.
+But problem arise when there is a configuration change like rotation of device and it's not a 
+safe place to put all this code ,bcoz all the data gets destroyed along with the fragment
+To resolve that we have onSaveInstanceState() ,  
+ but it has it's own issues like 
+it needs extra code and logic to store and retrieve data 
+and it's max capacity is nearly under 100 kilobytes. Store too much data and you will get an exception. transactionTooLargeException
+
+These are the problems that Lifecycle library & Application Architechture meant to solve:
+
+Application Architechture  is a way of designing your app's classes and relationship between them 
+such that code base is more organized, performant in particular scenarios and easier to work with.
+Much like how architecting a house helps us divide up and plan up different types of rooms that serves different purposes , like bathroom , kitchen , hall etc.
+architecting an app lets u do same with code and classes.
+There is no one right way to architect an application , like there is no single way to architect house.  
+so Architechture heavily depends upon circumstances,needs and taste.
+Every app architechture comes with its own strengths and weaknesses.
+
+In this lesson we are going to learn multipurpose architechture MVVM (Model-View-ViewModel)
+
+video 6  -  separation of concerns
+The software design principal that we are going to follow is called " separation of concerns. "
+It says that an app should be divided into classes each that have separate responsibilities.
+Architechture  gives us guidelines to figure out  that which classes should have which rersponsibilities in app.
+
+We are going to work with 3 different classes - ui controller,viewmodel,livedata
+
+1. ui controller - .i.e.  activity/fragment - responsible for any ui related tasks like displaying views and capturing user inputs.
+It executes all draw commands that put our views on screen.when OS event happens like a user presses a button , it's ui controller that gets notified first.
+But we want to limit it to only ui related tasks.i.e. we want to take out any descision making power out of ui controller.
+So while ui controller is responsible for drawing textview on screen , it is not responsible for calculations or processing that decides what actual text to draw.
+And when ui controller gets to know that user pressed button , it will immediately going to pass that information to second class in our
+architechture .i.e. viewmodel , which will do the actual processing.
+
+2. ViewModel :- purpose of the viewmodel is to hold the specific data needed to display on fragment/activity it is associated with.
+viewmodel may do simple calculations and processing on data so that's it's ready to be display by UI Controller.
+The ViewModel class will contain instances of 3rd class , LiveData.
+For now just know that , LiveData are crucial for communicating information from ViewModel to UI Controller , that it should update and redraw screen.
+
+For eg . in our app , we have GameFragment as our UI Controller , who is responsible only for drawing game elements on the screen & knowing when
+the user presses the button , nothing more.
+When buttons are pressed , GameFragment  will pass this information along to the GameViewModel. 
+GameViewModel will hold data like score value,list of words, and current word to be displayed , becoz that's the data 
+that is needed to know what to display on screen.It will also be in-charge of simple calculations to decide current state 
+of the data.
+for eg. what current word is and list of words, and what current score should be.
+
+video 7 -  ViewModel
+viewmodel is an abstract class that u will extend and then implement.It holds ur app's ui data and survives configuration changes(eg. device rotation)
+ViewModel is a part of LifeCycle Library.
+As we know in Architechture, ViewModel is a place to put ur apps UI data.
+Here is reason why rhis is helpful :-
+For now , all of ur UI data is in frag/activity , and when it goes under cofiguration change (device rotation)
+the activity and all of it's fragments gets destroyed and rebuilt by OS.Which means unless u do something ur data is lost.
+You may save data using onSaveInstanceState() , but it is not a good choice if u have complicated data.
+So enter the ViewModel , instead of having UI data at the fragment, move it to your viewmodeland have the fragment reference to the viewmodel(fragment-> is referencing -->to the-->viewmodel).
+Viewmodel survives the configuation change , so while the fragment is destroyed and then remade , all that juicy data that you need to display is still present in ViewModel.
+If you reconnect ur recreated fragment to the existing ViewModel,all of the data is right just there for you.
+Unlike onSaveInstanceState() , the ViewModel has no restrictions on size.
+
+
+video 8 -  create ViewModel
+ " ViewModels are made for and associated with a single fragment/activity. "
+   
+To use ViewModel and LiveData we needed to 
+1.add gradle dependancy of androidx. Lifecycle 
+2.make kotlin file as GameViewModel.kt  &  extend ViewModel class(an abstract class)
+3. viewmodels gets destroyed with fragment/activity that the viewmodel is assocoated with is finally & completely destroyed.
+    Right before this happens there is a callback called onCleared() in the ViewModel class.so override onCleared() to keep track
+    of the lifetime of the ViewModel.
+4.Now in order to use this ViewModel , i am going to go over GameFragment & make sure that it knows about GameViewModel.
+we will make a field for our  new viewmodel & in onCreateview() , here lifecycle library creates viewmodel for u,
+u never construct viewmodels urself , if u did , u will end up creating viewmodels everytime the fragment was recreated which wouldn't solve our rotation issue.
+so instead lifecycle library creates viewmodel for u.
+you request viewmodel from  a class called ViewModelProvider. which provides u with a correct viewModel.with a one liner statement below :
+   viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+here this means u are passing in fragment  &  secondly  -->  GameViewModel   is passed specificly here bcoz we want to use it. 
+The first time this code get executed that you requested GameViewModel from ViewModelProvider , it will a new instance of GameViewModel for you 
+and that instance is gonna get associated with the act/fragment that u passed in (.i.e.  this  -->  which is our fragment) 
+when viewmodelprovider is called again it will return a reference to a pre-existed GameViewModel associated with this UI Controller.This is what re-establishes connection to the same ViewModel.
+and we will add a Log statement to say "ViewModelProviders.of()  called "
+It will create a viewmodel for you and uses same viewmodel again & again.
+(Watch above part again in video and listen.)
+
+
+MY OBESERVATION :-
+1.when we leave fragment that has it's associated ViewModel(eg. navigating to other fragment or pressing back button ) , onClear() is called..i.e. viewmodel gets destroyed.
+2.when we rotate phone, our activity/frag. gets destroyed & recreated, but viewmodel is still there with data , and when act/frag gets recreated they will again reference to the same viewmodel object(.i.e. viewmodel is not created again).
+3.same when we put app in background , and OS kills app and restarts act/frag again , it will just give reference to same viewmodel object.
+
+NOTE: PENDING 
+above 3rd point , check OS kill using adb command in lesson 4 .
+
+
+VIMP VIMP VIMP VIMP VIMP VIMP 
+NOTE :-  viewmodel gets destroyed when we press back button and permanantly navigate away from fragment.At this moment onCleared() gets called.
+
+video 9-
+Now we have viewmodel , now we just need to figure out what code to put in it.
+Our GameFragment should only contain code , that is needed to display(not to calculate) proper values on screen an catch user input events.
+It should not contain the UI data that we want to survive rotations.and sholud not cotain any of the code that processes data.
+ViewModel should never contain references to fragments/activities/views.
+
+Q 1) why viewmodel should never contain references to fragments/activities/views ?
+--> By nature fragments , activities , views don't survive configuration changes.
+so if you say to ViewModel , that hold on to the reference to the activity , fragment , view that is no longer
+being displayed on the screen bcoz it was lost due to a configuration change , you're now holding onto a reference
+to something that should have been cleaned up.
+In best case scenario it's a minor memory leak.
+In Worst case scenario u are tryin to do something with an old fragment that is not on the screen , and that is an ERROR.
+
+
+Video 10 -
+what should be moved to viewmodel:
+1.first we need to move ,score & word , becoz these are the pieces of data that should be preserved during configuation changes.
+2.we will move WordList , becoz we want to know what words we have already used.(bcoz on conf.change everything will be erased , we again will get all words as it is.)
+3.we will not move binding variable , bcoz it retains references to views.
+4. updateWordNext() & updateScoreNext() can't be moved , bcoz updating UI is totally responsibility of fragment.
+5.   resetList()  nextWord()  will move to viewmodel , becoz we don't want to call it everytime fragment gets created after configuration change , bcoz otherwise on every rotation change it will change data on screen.So call them only once when ViewModel creates , in init block.
+6. gameFinished()  has some descision making code but still  We will not move gameFinished()  becoz it has navigation.Navigation needs acces to a navController and it is found by passing in view/fragment which we do not want in the viewMode.So if there is navigation code , don't move it to viewmodel.
+
+NOTE :- gameFinished() CALL IS VERY TRICKY TO RESOLVE  WITH THE CONSTRAINT THAT THE VIEWMODEL CAN'T KNOW ABOUT THE FRAGMENT.
+
+
+video -  11  Benefits of good architechture
+1.separation of concerns - code is more organized,manageable,and debuggable. helps to stay away from Lifecycle related issues and bugs.
+2.code is modular
+3.code is easier to test
+
+video -  12  The power and Limits of  ViewModel
+viewmodel hasn't resolved our all problems.In fact, it's actually introduced some new issues and inefficiencies.
+1.ViewModel does preserve data rotation change but this data is still lost when an app is shut down by OS.
+The proper way to preserve data even if your app is terminated , involves using combination of onSaveInstanceState() and Data persistance(DB's) which we will learn later.
+In our case , our app is a quick game played in real time , and no one expects to come after 3 days to check state of app.so it's ok if it gets shut down by OS in the background.
+ 
+
+
+video 13 - LiveData
+We need a way to communicate from ViewModel back to UI Controller without having the viewmodel store references to any views,activities or fragments.
+For eg . we need viewmodel to communicate when data like score has changed, so that the GameFragment knows to actually redraw the score.
+what would be really great if we could change the data in ViewModel and then just have the screen magically know when to update itself.
+Fortunately , LiveData could do this for us.
+
+LiveData is obeservable data holder class that is also Lifecycle aware.
+
+Livedata holds data , it means it wraps around some data. For eg . we'll have Livedata wrap around the current score.(it s like a outer cover for any data )
+Livedata is Obeservable , this goes back to our oberserver pattern that w learned in 4th lesson.
+In obeserver pattern , you have a object called as "subject" , the subject keep track of other objects called as "obeservers".
+Obeservers watch/observe the subject.When the status of the subject changes , it notifies obeservers by calling method in the obeserver.
+In LiveData's case , the subject is the LiveData's object, and the obeservers are the UI Controllers.
+*******The state change is whenever the data wrapped inside LiveData changes.*******
+foe eg . in our app , we have our score data and we would wrap it with a LiveData Object.The Obeserver would be GameFragment(UI Controller)
+Now whwnever our score LiveData changes,it will automatically call a method in GameFragment.'In this case we can have it automaticlly call updateScoreText(),which will then update UI.
+So whenever the score changes , we can be sure that the UI will automatically update itself bcoz LiveData is UI data , it's kept in the ViewModel.
+
+Here is LiveData wrapped version of score:-
+ val score=MutableLiveData<Int>()
+***Notice how this is a val , the LiveData object will always stays the same , although the data store within it might change. 
+
+Then we need to set up obeservation relatioship , to do that in gameFragment , u need to get a reference to the LiveData for score.then call method observe() , then pass "this" .i.e. this GameFragment , that's what assocoates the fragment with the score LiveData.
+Next you need to pass an obeserver object ,this is an object with just a single method in it(onChanged---->.i.e.when the data changes).
+Using a Lambda Expression , 
+we can simplify this to just the word observer with curly braces.This is the code that gets called whenever score changes.
+I'm going to have it call updateScoreText() passing in the new score.Now somewhere else in the code , when u want to change the value of score LiveData, you can then call setValue and pass it the newScore value to the LiveData.This will then trigger all of this obeserve() code which will update ui automatically.
+
+Thus by setting up this obeserver relationship , u can have the viewmodel communicate data changes back to the UI controller.
+ 
+
+video 14 : Add LiveData to GameViewModel.
+in the gameViewModel , i'm looking at the score & word fields , these are the 2 fields that when they change , should make the UI update.So these are going to be LiveData's.
+so we will make score a LiveData , MutableLiveData is a LiveData whose value can be change/update.It's a generic class.So i also need to mention what type of data it holds.we will make it "int".But it has no value.
+In fact at this moment it's null.And it is going to be true for any LiveData that u construct.This always start with a null value and this type will always be nullable(nullable means it can become null).
+Now since i don't want the score to start out as null , we will set score's initial value to zero in init block.
+we will do it like : 
+	score.value=0
+
+also in below code in GameViewModel we need to make change in score , bcoz score is not a integer variable anymore , now it has become a LiveData.
+
+MY MISTAKE:
+mi aadhi init block madhe score la initialize kela zero value deun.and nantar score la declare kela as a MutableLiveData , so it gave ERROR.
+It solved by first declaring MutableLiveData and then initializing it in init block below declaration(keep in mind ---> line-by-line execution)
+
+
+In onSkip()
+we will do ,
+score.value=score.value-1     // same as score--
+but it's still unhappy, becoz when we first created LiveData , the value it was holding is null.
+Even though at this point , i know that it's value has been initialized, i still need to deal with a fact that score is a nullable type , so we need to do a null check.And instead of using -1 , we will call minus() method and pass 1.
+.i.e.  score.value=(score.value)?-1
+This is basically same  as subtractiong -1 , but with null-safety.
+
+Now let's setup the observer relationship.
+in onCreateView() , 
+first get reference to our livedata, and then call the obeserve method , 
+	viewModel.score.observe()
+
+observe() takes 2 things :
+1.ui controller associated with livedata -->  this
+2.anonymous observer object , this is essentially the code that's going to get triggered anytime the LiveData changes.
+This observer here gets passed in the updated data.and we will paste the code of updateScoreText() in obeserve() method and delete the updateScoreText() method. 
+And at this point we should be able to remove all calls to method updateScoreText() , becoz whenever the data changes , it should call this observer here
+and also in gameFinished(),
+ val currentScore = viewModel.score
+we will make it --->
+val currentScore = viewModel.score.value
+but due to nullability , we need to null check , so we will use elvis operator  ?:   , that says if your scor value is int  then it's okay , if it is null then give it zero , as shown below :
+val currentScore = viewModel.score.value ?: 0
+
+video 15  -  Lifecycle Awareness
+LiveData is an observable data holder class that is also lifecycle aware.Now we have talked about how LiveData is observable,we talked about how it holds data , but we haven't really addressed what lifecycle awareness means.
+This means in broad terms LiveData knows about the Lifecycle state of it's UI Controller observers.
+LiveData uses this information intelligently with your fragments and activities.
+Here you need to know , that LiveData will only update UI Controllers that are actually on-screen.
+so if your fragment goes off-screen and the value of LiveData changes , let's say four times, it would not update the off-screen fragment.
+When a UI Controller goes from off-screen to on-screen though , LiveData will always trigger the observer with the most recent/latest data.
+so in the last example , if the fragment is in the background and the score changes 4 times , the GameFragment does not get notified.But as soon as it comes on-screen it will call observer code with the most recent value.
+  VIMP VIMP VIMP ---->  2.Next if LiveData already exists with some data, and a new Ui controller starts to observe it , it will get the current/latest data immediately.
+
+
+***Finally , if the UI Controllers get destroyed , the LiveData will actually internally clean up its own connections to the observer.
+
+***Remember back when you set up the observation connection in onCreateView() ?  well you didn't cleaned up that connection in onDestroyedView() and you don't need to.That's bcoz LiveData is Lifecycle aware and therefore can do it's own cleanup for you.
+
+If u watch previous lesson this is similar to when we had the timer that knows when to start and stop itself.
+what is little bit confusing here is UI Controller is observing LiveData changes ( from UI Controller to LiveData)  and then there is a second lifecycle observation connection over here where LiveData observes the UI Controller goes on-screen or off-screen.
+You get this second observation behaviour for free due to how LiveData is implemented , all you need to do is pass in correct UI Controller in observe() method.---> "this"
+
+
+summary:
+1.LD is lifecycle aware , means it knows about the lifecycle state of its associated UI Controllers.This allows LiveData to only update the UI controller when it is in the foreground.
+2.immediately send the fresh data to a UI Controller when it comes back to foreground
+3..immediately send the fresh data  when a new UI Controller observes it,
+4. cleans up connection itself , when UI Controller gets destroyed.
+
+Video 16 - LiveData Encapsulation  
+
+Let's encapsulate our variables as LiveData in GameViewModel. The point of this exercise is to not expose MutableLiveData outside of the view model.
+
+
+I want to talk about another software design concept, encapsulation. Encapsulation is the idea of restricting direct access to an object's fields. 
+This way you can expose a public set of methods that modify the private internal fields  
+and you can control the exact ways outside world classes can and can't manipulate these internal fields. 
+Now, the opposite of this would be having fields that are just completely publicly editable, meaning that any external class could modify these fields any way
+ that they want. 
+This makes it easier to introduce bugs because you can basically do anything to the fields from anywhere in the application code.
+It also makes hunting down these bugs a lot harder since it's possible that some random external class was at fault. 
+Right now I'm in GameViewModel and with this view models live data, we're in this exact situation. 
+I'm going to go over to project and open up the game fragment and then basically from anywhere in here, 
+I could get the view model and then get a live data for the view model such as the score, and I could change its value. 
+score.value= -1000
+Now, architecturally this is a big no-no because the fragment isn't supposed to do any sort of data processing or data changing. 
+The fact that I can type this statement at all is a problem and it points to the fact that our live data is not properly encapsulated.
+So as a general rule of thumb, you should try to restrict edit access to your live 
+In this case only the view model should be updating the score and word fields.
+ But for this observation code to work, it's important that you can still get some access to the live data so it can't be completely private.
+ Let's go back to our game View model. 
+So being able to write and read from live data is where the distinction between Mutable live data and just plain old live data comes in.
+Mutable live data is, as the name implies, live data that can be mutated or modified, whereas live data, on the other hand, is live data that you can read but you cannot call set value on. 
+
+So here inside the view model we want the live data to be mutable LiveData. But outside the view model, in say, game fragment, we want the mutable live data to only be exposed as live data.
+
+ To do that we can use a concept in Kotlin known as a " backing property ". 
+
+A " backing property " allows you to return something from the getter other than the exact object.
+
+Here's how this will all work. In the code, I'm going to make two versions of this score live data object one that is Mutable and will be used internally and one that is not. For the internal version I'm going to use Mutable and I'm going to put an underscore in front of it. I'm also going to mark it as private because it's private to the view model. Now, for the external version.
+I'm not going to make it private and I'm going to call it score. And I'm going to make its type live data instead of mutable live data. This right now is public. I'm now going to override this public live data's get method using a backing property. And I'm going to return the internal score.
+Because of this type that I specify here, this is only going to be exposed externally as live data. Meaning that if I go over to my game fragment, suddenly this is treated as live data. And I don't have access to this setter anymore, which is what I wanted. So let's go ahead and delete this code now. Let's go back into the game view model.
+There's a few things I'm going to need to update. If I scroll down, I now want to change the score to the internal version. So I'll go through and I'll put underscores in front of anywhere that I reference score. This now means that I'm using the internal version, which remember is the mutable version, which is why I can still called stop value. Okay?
+So I've properly encapsulated my Score live data. What I want you to do is go up and encapsulate the word live data as well. When you're done, make sure to run your app. Good luck.
+
+
+
+Video 17 - Event vs State
+The other issue that i haven't resolved what to do when game  finishes.
+So one perfectly reasonable thought is that we could make a LiveData to help let the fragment knows when game has ended , 
+& we should therefore navigate to the final screen.
+After LiveData is the only mechanism that we know of , that allows us to easily communicate from the viewModel back to the UI Controller.
+Now LiveData keeps track of Data State.
+Example of state are things like this button is red right now, or the current score is 20. 
+ Navigating to the other screen is the example of an Event.
+ An Event happens once and then it's done until it's triggered again.
+You shouldn't stay in the navigating to final screen state , you should navigate once and then u should be immediately done navigating.
+Conversely a button doesn't become red once , it's red and then it remains red, it maintains it's state.
+
+Video 18 - Add endGame Event
+In this step , you are going to use LiveData to model a GameFinished event.
+and by the end of this step you are able to navigate when the game finishes from the viewModel.
+This requires adding little bit more code beyond basic LiveData observation to get everything working correctly.
+so for now we will comment out code inside GameFinished() and just show a Toast Message to work easy and eventualy we will add navigation code.
+
+Now in GameViewModel , we will make a new LiveData to represent GameFinished Event whose type is Boolean.
+So what i want this LiveData to do is when it becomes true , it will show that Toast that the game has ended and when it's false it just shouldn't  do anything.
+so initially we will set this LiveData value to false -- in init block.
+Now we need to figure out where the game actually finishes.
+So down below in nextWord() , when the WordList becomes empty ,  i want to finish my game.
+So we are going to change the value of  EventGameFinished to True.So now i'm properly signifying when the game is finished.
+I'm going to go over to the GameFragment and we will add a new Observer and that is going to observe this new EventGameFinished LiveDatathat i have.
+so our this LiveData is a Boolean , so we will chech if it is True and if it is we will call GameFinished() method of GameFragment which will show a Toast. 
+
+Now app is working fine and it is showing a Toast message when game is finished.
+But we have introduced a little tricky bug , .i.e. on rotating phone everytime it shows that Toast again & again , But we want to show this Toast only once.
+Now this is happening bcoz LiveData's lifecycle-aware behaviour.Remember one of the LiveData ability is when you rotate phone , it  recreate activity which reconnect observer and then it gets current data immediately.
+So that's why Toast gets triggering on rotating the phone.
+So what  should we do ?
+well once the Toast is shown which is the event that we wanted to only happen once we need some way to tell the Viewmodel that we are no longer in this game has finished state.
+Essentially we need to tell the ViewModel that we have showed that Toast or that the Navigation has happened.
+So back in GameViewModel , at bottom we will create a function called onGameFinishComplete() and in this function set gameFinishedEvent back to false.
+This is representing that the event has been handled.
+And in GameFragment in the gameFinishedEvent observer after the gameFinish() callback , use onGameFinishComplete() callback. This will ensure that the Toast is only showed once.But if we keep pressing got it button it 
+will continue to show Toast.
+Finally uncomment navigation code inside GameFinish() method and remove Toast. Now it should be working completely fine.
+
+Video 20 - Adding a Timer
+At this point you have already converted a whole fragment  of this game to a new Architechture.Next you will tackle adding a brand new feature.
+You are going to put a timer into your application.Once you're done adding this feature , your game will countdown like this( i mean like nornal timer in decreasing order 0:59 0:58 0:57) 
+This code counts down the seconds until the end of the game.
+
+ 
+
+
+VIDEO 21 - ADDING CountDownTimer  
+
+1. KEEP SHOWING WORDS
+In GameViewModel we will call resetList() if words are over , so that list will not get empty.Game is going to over when Timer finishes , and not when word finishes bcoz we added resetList() which continues to add words.
+2.PASTE COMPANION OBJECT THAT CONTAINS  CONSTANTS SHOWING TIME IN MILLISECONDS.
+2.To implement Timer, Android handily provides a CountDown Timer Class.It has 2 methods onTick()  - called at every second & onFinish() - called when time becomes zero.
+when we create a Timer we need to pass total time timer should run and time of each tick.
+
+
+VIDEO 22 - ADDING A ViewModelFactory    (it is used to pass arguments to the ViewModel)
+
+you've implemented a viewmoodel ui controller architechture for GameFragment.other 2 fragments are pretty simple.
+TitleFragment doesn't contain any dynamic data & ScoreFragment just contains the score.
+Now u could make an argument either not add viewmodels for these fragments 
+
+
+
+
+
+

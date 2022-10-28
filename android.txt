@@ -1,0 +1,11 @@
+  binding.one.setOnClickListener {
+      s1=binding.t2.text.toString()
+            binding.t2.text=s1.plus("1")
+
+        }
+
+
+
+my personal questions:-
+
+1.how to get id of a button clicked?

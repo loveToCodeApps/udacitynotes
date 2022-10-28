@@ -1,0 +1,24 @@
+how does this adapter patter pattern fits in the recyclerview?
+in case of recyclerview , we have our app's data which we want to display as list.
+we don't want to change the way our app stores or proesses the data , just to put it on the screen.
+ so we built an adapter to adapt our data into something that can be use by recyclerview.
+concretely our data is stored in a room database , we will build an adapter that adapts data from room db into
+something that recyclerview knows how to display.
+
+RecyclerView uses Adapter to figure out how to display your data on screen.
+
+when it first starts out,
+RV asks adapter that how many items there are , adapter says there are 100 , then RV immediately starts creating
+the views needed just to show on first screen.
+first RV asks adapter to create new view for the first data item in your list.
+once it has view , it will ask adapter to draw the item.it repeats this until it doesn't need more space to fill the screen.
+And it's done.It won't look at other items until user scrolls up. 
+if item
+
+viewholder - objects that holds views
+
+step 1 - add recyclerview in place of scrollview in sleeptracker fragment
+2.create a class for adapter , and extend it with recyclerview.Adapter<TextItemViewHolder> , here we need to tell 
+recyclerview that what type of ViewHolder we are working with . for eg. TextItemViewHolder
+3.Recyclerviews will never interact directly with views , all of its operations are performed on viewHolders.
+ 

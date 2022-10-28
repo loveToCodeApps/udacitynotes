@@ -1,0 +1,27 @@
+KOTLIN BASICS TUTORIAL
+1. There are no semicolons ( ; ) used in kotlin at end of statement. BUT you can use semicolons ( ; ).
+
+2. everything executes in main() function
+   eg.  fun main()
+	{
+	    print("hello world")   OR  println("hello world")
+	}
+
+3.variables are of 2 types :-  1) var(these varibles can be reassigned). 2) val(these can't be reassigned, like final variables in java)
+4. SYNTAX OF VARIABLE DECLARATION :- 
+	var name:String="sagar thorat"
+                                         OR
+	var name="sagar thorat"  <---( HERE IT IS AUTOMATICALLY PREDICTING IT AS INTEGER , THIS IS CALLED TYPE INFERENCE, SO IF U REASSIGNED OTHER TYPE VALUE IT WILL GIVE ERROR)
+
+5.TYPES IN KOTLIN ARE NON-NULL BY-DEFAULT.BECOZ  OF LOT OF NULL POINTER EXCEPTIONS IN JAVA.
+ .I.E. STRINGS IN KOTLIN ARE NON-NULLABLE
+   SO,
+	var name:String=null  OR var name=null <---  // ERROR
+
+BUT FOR SOME OCCASIONS , YOU CAN MAKE STRINGS AS NULL BY PUTTING QUESTION MARK ON RHS OF DATA TYPE STRING.
+       eg.
+	var name:String?=null  <--- // NO ERROR
+
+6.WE CAN DECLARE VARIABLES OUTSIDE OF main() FUNCTION.
+
+7.

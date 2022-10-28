@@ -1,0 +1,37 @@
+1. IN HORIZONTAL ORIENTATION LINEAR LAYOUT - ONLY CAN USE CENTER_VERTICAL FOR VIEWS.
+2. IN VERTICAL ORIENTATION LINEAR LAYOUT - ONLY CAN USE CENTER_HORIZONTAL FOR VIEWS.
+\
+
+IMP :
+TO SET BACKGROUND COLOR OF BUTTON
+
+ style="@style/Widget.AppCompat.Button.Colored"
+app:backgroundTint=""
+(don't use  android:backgroundTint="")
+
+
+
+UNDERSTOOD TOPICS
+1.Random()  class 
+PROBLEM 1:-
+import random() class from (java.util)
+
+here if we just assigned a random.nextInt(6)+1  to a variable then it will be called only once , so we will get only same value again and again.
+but to get random values we need to put that line in a function , so everytime a function get's called it will assign a different random value every time.
+
+PROBLEM 2 :-
+DECLARING GLOBAL VARIABLES FOR findViewById()
+we can set lateinit var to null , but it will become necessary to do null checks
+calling findViewById() from a functions needs memory to go through that hierarchy of views so simple phone can lag , so solution is to declare global findViewById():-
+1.use lateinit var  :- it tells compiler  that variable will be initialzied before use and will not be null , so 
+		lateinit var diceimage:ImageView
+2. IN onCreateView IT IS MUST TO INITIZE LATEINIT VAR BEFORE USE .
+       SO ,    diceimage=findViewById(R.id.dice_image_1)
+
+3.
+	android:src="@Drawable/empty_dice"
+	tools:src="@Drawable/dice_image_1"
+
+sometimes we want to see the preview of app in preview panel , but empty_dice will show nothing in that case
+use tools:src to show , to get idea of how our app will look like.At compilation tools:src will be ignored.
+4.

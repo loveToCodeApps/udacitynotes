@@ -1,0 +1,184 @@
+  We can think of fragment as a portion of UI of that activity.
+
+principles of Navigation :
+
+1.there is always a starting place
+there is a fix page or starting pt when user starts app for first time and that also should be the last page to user
+when user presses the back button and exits the app.
+
+2.you can always go back
+the navigation structure of your app should be represented with last in first out structure(LIFO) .i.e.  Back-Stack.
+start destination lies at bottom of navigation stack(back stack) and current destination lie at the top of the stack.
+The operations that change navigation stack(back stack) should always operate on top of back stack either by pushing 
+a new destination on top of the stack or by popping out current destination from the top of the stack..
+
+3.up goes back mostly
+up button works same as back button of android os , but up button should not be present on home screen (bcoz it's task i to traverse back on previously visited screens of that app**) or
+starting screen  to put user outside of the app , becoz  we already have back button. 
+
+
+HOW TO CREATE NAVIGATION GRAPH ?
+we need to give navigation control over which fragment to display in the activity.navigation provides it's own fragment called "Nav Host Fragment"
+which acts as a host for each fragment in the navigation graph.as user moves through different destinations within navigation graph of the activity , Nav Host 
+swaps fragments in and out necessarily and also creates and manages back stack.
+conclusion :-  so NavHostFragment is the fragment provided by android itself for all the managing stuff and 
+automatic back-stack(navigation-stack)
+
+
+
+note :- the arrow we are drawing from one activity to other in the navigation graph is called "action" and 
+it just helps to tells possible paths to swith the destinations , to actually switch destinations we need to add click listners.
+
+in that click listner we need to find instance of navigation controller , which is a class we use use to manage navigation between different destination within 
+navHostFragment 
+nav host fragment is the parent in the view hierarchy of our current fragment(titleFragment)..i.e. we can traverse this hierarchy to find navHost from  any view of fragment including
+the play button we are working with.
+Navigation provides us helper function called as findNavController() , it takes a view and finds enclosing navHostFragment and returns navigation controller for that
+navHostFragment
+
+
+note for coding : 
+in every fragment.java ,  wheh we use binding variable , it's type must start with -> Fragment
+   for eg.  for an  Activity/Fragment of name ->  MyWinning  ===> 
+	 val binding:FragmentWinningMyBinding=DataBindingUtil.inflate() 
+
+
+
+
+
+SETTING AN UP BUTTON IN ACTION BAR
+
+navigationController has an ui library caled NavigationUI , it integrates with action bar to implement correct behaviour for up button.
+to hook up the action bar with the navigaionController , NavigationUI needs access to navigation controller.
+
+MY OBESERVATION :- 
+When we implement up button by using navController use <fragment>  and not <fragmentContainerView> bcoz
+it will give error.
+
+OVERFLOW MENU:-
+If we put overflow menu inside main activity , then it will be visible in all the fragments
+but if we add it in any particular fragment then it will be limited.
+
+
+process:-
+1.First we need to tell android that we are going to have a menu associated with TitleFragment , so we will put
+  setHasOptionsMenu(true)  in TitleFragment's onCreateView() method.
+
+
+
+SAFE ARGUMENTS 
+Fragments contains arguments in the form of Android Bundle which is a key-value store.This key has a unique value such as string to fetch associated values.
+There are  limited types that can be stored as values in a bundle(primitive types such as char,int,float,various types of arrays,char sequence,and arraylists)
+
+TO PASS DATA FROM FRAG. A TO FRAG. B
+1.Create an instance of argument bundle class in fragment A.
+2.Then put data into the bundle using key-value pairs.
+3.then you set it the arguments property of instance of fragment B when you create it.
+
+
+NOTE :- 
+ WHILE USING SAFE ARGUMENTS , IF YOU SET ARGUMENTS DEFULT VALUE , THEN IN JAVA FILE
+OF FRAGMENT THE CONSTRUCTOR WILL NOT TELL TO PROVIDE ANY ARGUMENT , BUT IF YOU DIDN'T SAVE THE DEFAULT VALUE , 
+THEN YOU MUST PROVIDE ARGUMENTS.
+eg.Here below 123 is the argument.  	
+ Navigation.findNavController(it).navigate(StartGameDirections.actionStartGameToWinFragment(123))       }
+
+2.don't use (arguments) in destination fragment   instead use (requireArguments())
+
+202206A001322 
+Sarvaswa@9
+
+
+
+
+
+SHARE INTENT:-
+ANDROID ALLOWS US TO NAVIGATE BETWEEN ACTIVITIES WITHIN APP  AND THE ACTIVITIES PROVIDED
+BY ANOTHER APPLICATIONS. FOR EG. YOU CAN ACCESS CAMERA ACTIVITY TO CLICK A PICTURE FOR YOUR OWN APP, ALSO YOU CAN ACCESS CONTACTS ACTIVITY 
+TO SCROLL AND FIND YOUR DESIRED CONTACT OR CAN EDIT IT OR DELETE IT ETC.THIS IS ALL DONE WITH THE HELP OF
+INTENTS AND INTENT-FILTER.
+INTENTS:- IT'S LIKE INTENTION.IT IS SOMETHING THAT APP WANTS TO TELL ACTIVITY TO PERFORM.
+THEY COME IN 2 FLAVOURS:-
+1.EXPLICIT
+2.IMPLICIT
+
+EXPLICIT- IT IS USED TO LAUNCH AN ACTIVITY USING THE NAME OF THE TARGET 
+ACTIVITY CLASS AND ALSO TO LAUNCH ACTIVITIES OF YOUR OWN APP.
+
+IMPLICIT-IT PROVIDES ABSTRACT DESCRIPTION OF THE SCTIVITIES TO BE PERFORMED,
+THEY ARE USED TO LAUNCH ACTIVITIES THAT ARE EXPOSED BY OTHER APPLICATION.
+INTENTS ARE THE DESCRIPTION THAT SYSTEM USES TO LOCATE ACTIVITIES ON BEHALF OF THE APPLICATIONS.
+
+EXAMPLE:-IF INTENTS ARE USED TO LOCATE GROCERY STORES IN REAL WORLD IN EXAMPLE OF THE EXPLICIT INTENT THEN,IT WOULD BE DESCRIPTION OF THE PARTICULAR GROCERY STORE,
+BUT ON THE OTHER HAND IMPLICIT INTENT WOULD DESCRIBE GROCERY STORES WITHIN RADIUS OF 5 KM THAT SELLS ORGANIC CABBAGE.NOTE THAT SYSTEM MIGHT NOT HAVE ANY APPLICATION TO HANDLE IMPLICIT INTENT JUST AS CABBAGE SELLING STORES NEAR YOU.
+WHEN MULTIPLE ANDROID APPS CAN HANDLE THE SAME IMPLICIT EVENT ANDROID WILL POPUP A CHOOSER THAT CONTAINS A LIST OF COMPATIBLE APPS THAT USER CAN SELECT THE ONE TO HANDLE THE REQUEST.
+IMPLICIT INTENTS ARE IMPORTANT BECOZ IT ALLOWS AN APP TO REQUEST ANOTHER APP FOR SOMETHING WITHOUT KNOWING ANYTHING ANYTHING ABOUT ANOTHER APP.
+WHEN WE SHARE SOME TEXT FROM OUR APP USING IMPLICIT INTENT WE DONT NEED TO KNOW
+WHETHER USER SENDING THAT TEXT WHETHER BY USING text-message/email/social media app. 
+
+EACH IMPLICIT INTENT MUST HAVE AN ACTION , BUT TIS ACTIONS ARE COMPLETELY DIFFERENT THAN WE HAVE IN NAVIGATION GRAPH.
+ACTION IN INTENTS MEANS THE TYPE OF THE THING TO BE DONE.
+COMMON ACTIONS ARE DEFINED IN THE INTENT CLASS SUCH AS VIEW ,EDIT ,DIAL(ACTION_VIEW, ACTION_DIAL,ACTION_EDIT)
+
+ALSO IMPLICIT INTENT HAS CATEGORY AND DATATYPE  TO FURTHER DESCRIBE THE OPERATION.CATEGORIES AREN'T ALWAYS USED.BUT ARE FURTHER USED TO DISAMBIGUATE THE ACTION.
+AN EXAMPLE HOW CATEGORIES ARE USED IS IN THE MAIN ENTRY POINT ACTION.
+THE CATEGORIES ARE USED ALONG WITH THE MAIN ENTRY POINT,TO LAUNCH  IN  AVAILABLE MUSIC PLAYER OR MAPPING APPLICATION.
+
+FINALLY , IMPLICIT INTENTS CAN USE DATATYPE SUCH AS TEXT OR A JPEG IMAGE, WHICH ALLOWS APPLICATION TO BE CHOSEN BASED UPON DATATYPES THAT THEY CAN ACCEPT , THE SEND INTENT USED LATER ON IS GOOD EXAMPLE OF IT.
+
+ALL ACTIVITIES MUST BE REGISTERED IN ANDROID MANIFEST TO BE LAUNCHED. ACTIVITIES THAT ARE LAUNCHED EXPLICITLY CAN BE DECLARE JUST WITH AN ACTIVITY TAG, WHILE IMPLICITLY DECLARED
+ACTIVITY REQUIRES INTENT-FILTER.AN INTENT FILTER IS USED TO EXPOSE THAT UR ACTIVITY CAN RESPOND TO AN IMPLICIT EVENT WITH CERTAIN ACTION,CATEGORY,TYPE.
+
+FOR THE ANDROID LAUNCHER TO START AN ACTIVITY, IT NEEDS TO BE REGISTERED IN MANIFEST WITH CORRECT INTENT-FILTER .
+IF THE ACTIVITY IN THE APP DIDN'T HAVE INTENT-FILTER  , THEN IT WOULD NOT APPEAR IN LAUNCHER.
+
+
+
+MENU NOTE :-  
+IF YOU WANT TO CREATE A MENU ON DIFFERENT FRAGMENT'S ACTION BAR , THEN JUST MAKE NEW/DIFFERENT MENU FILE FOR
+NEW MENU IN MENU FILE.
+
+
+
+THERE IS ONE PROBLEM IN INTENTS SHARING THAT IF THERE IS NOT AN COMPATIBLE APP FOR SHARING THEN OUR APP WILL CRASH
+ FOR EG.
+     IN OUR APP , JUST COMMENT OUT OR DELETE->  .setType("text/plain")
+    THEN OUR APP WILL CRASH ( ERROR : THE  ActivityNotFoundException), BECOZ THERE WILL BE NO COMPATIBLE APP , SO IT IMPORTANT TO MENTION TYPE OF DATA SENDING
+
+SO , TO HANDLE THIS EXCEPTION 
+	1.WE WILL USE TRY-CATCH BLOCK.
+			OR
+	2.WE WILL CHECK IF getShareIntent() is not NULL, BUT IF IT RETURNS NULL,
+ 	THEN WE WILL JUST JUST HIDE THE SHARING ICON , SO IT WILL AUTOMATICALLY
+	 PREVENTS THE CRASH OF OUR APP. 
+
+NAVIGATION DRAWER:-
+-IT CAN BE USED BY CLICKING ON THE HAMBURGER-ICON OR BY SLIDING IN THE SCREEN FROM LEFT END
+-IT IS USED WHEN APP IS COMLEX AND HAS MORE DESTINATIONS AND FROM THE SAME ACTIVITY/FRAGMENT , 
+-WHEN YOU NAVIGATE USING NAVIGATION-DRAWER IT ALSO PUTS HOME SCREEN(NAVIGATIO DRAWER ORIGIN) IN BACK-STACK OF BACK-BUTTON.
+- IT IS PART OF MATERIAL LIBRARY MADE BY GOOGLE , SO FIRST WE WILL NEED TO ADD IT'S DEPENDENCY.
+-NAVIGATION DRAWER IS BASED UPON MENU RESOURCE , SO WE WILL NEED TO CREATE A NEW MENU RESOURCE.
+  
+
+Navigation Listners(Video Number - 3.27)---> we can do other things with navigation listners but in this case we are locking our drawer for other pages..
+It helps to block navigation drawer on any fragment other than start fragment.
+
+// prevent nav gesture if not on start destination
+navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, args: Bundle? ->
+   if (nd.id == nc.graph.startDestination) {
+       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+   } else {
+       drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+   }
+}
+
+
+Animation With Navigation:--
+Animation not only make your app attaractive but also it helps user to understand the flow of app.
+This animations are controlled by Xml Animation Resources.There are several android animations , but we are now focusing on view animation.
+
+alpha- describe how transparent something is-  at 0% view is invisible , at 100% view is opaque
+it has properties like fromAlpha    toAplha  with float values lies between 0 to 1
+android:duration="@android:integer/config_shortAnimTime"
+
+
